@@ -1,0 +1,12 @@
+# 3DS dev related files
+*.3dsx
+*.elf
+*.smdh
+build
+
+# Vim related files
+*.json
+
+# Ignore testing module
+unity
+
