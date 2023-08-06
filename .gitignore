@@ -10,3 +10,5 @@ build
 # Ignore testing module
 unity
 
+# Ignore clangd related files
+compile_flags.txt
