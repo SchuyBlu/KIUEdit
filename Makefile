@@ -14,7 +14,7 @@ BUILD_PATHS=$(PATHB) $(PATHO) $(PATHR)
 TSRC=$(wildcard $(PATHT)*.c)
 
 # Needed to create results files
-RESULTS=$(patsubst $(PATHT)Test%.c,$(PATHR)Test%.txt,$(TSRC))
+RESULTS=$(patsubst $(PATHT)Test_%.c,$(PATHR)Test_%.txt,$(TSRC))
 
 COMPILE=gcc -c
 LINK=gcc
@@ -25,7 +25,7 @@ CFLAGS=-I. -I$(PATHI) -I$(PATHU)
 .PHONY: clean
 
 # Define precious files, as Unity clears temporary files when executable runs
-.PRECIOUS: $(PATHB)Test%.out
+.PRECIOUS: $(PATHB)Test_%.out
 .PRECIOUS: $(PATHR)%.txt
 .PRECIOUS: $(PATHO)%.o
 
@@ -39,7 +39,7 @@ test: $(BUILD_PATHS) $(RESULTS)
 $(PATHR)%.txt: $(PATHB)%.out
 	-./$< > $@ 2>&1
 
-$(PATHB)Test%.out: $(PATHO)Test%.o $(PATHO)%.o $(PATHO)unity.o
+$(PATHB)Test_%.out: $(PATHO)Test_%.o $(PATHO)%.o $(PATHO)unity.o
 	$(LINK) -o $@ $^
 
 # Build test object files
