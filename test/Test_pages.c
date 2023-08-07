@@ -27,7 +27,7 @@ struct Pages pages;
 
 void setUp(void)
 {
-        pages_init(&pages, "Testing Paginator");
+        pages_init(&pages, "Testing Paginator", MISC_PAGE);
 }
 
 
@@ -37,16 +37,40 @@ void tearDown(void)
 }
 
 
-void test_GivenPagesAreInitialized_should_DisplayCorrectTitle(void)
+void test_givenPagesAreInitialized_should_displayCorrectTitle(void)
 {
         TEST_ASSERT_EQUAL_STRING("Testing Paginator", pages.title);
+}
+
+
+void test_givenNewDescriptionAdded_should_correctlyChangeDescription(void)
+{
+        set_page_desc(pages.curr, "Example of page description.");
+        TEST_ASSERT_EQUAL_STRING("Example of page description.", pages.curr->desc);
+}
+
+
+void test_givenNewOptionAdded_should_correctlyAddNewOption(void)
+{
+        add_page_option(pages.curr, "New option.", MISC_PAGE);
+        TEST_ASSERT_EQUAL_INT(MISC_PAGE, pages.curr->options[pages.curr->len - 1]->id);
+        TEST_ASSERT_EQUAL_STRING("New option.", pages.curr->options[pages.curr->len - 1]->desc);
+        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->len);
+        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->cap);
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->len);
+        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->options[pages.curr->len - 1]->cap);
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->selected);
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->dealloc_idx);
+        TEST_ASSERT_EQUAL_UINT64(pages.curr, pages.curr->options[pages.curr->len - 1]->prev);
 }
 
 
 int main(void)
 {
         UNITY_BEGIN();
-        RUN_TEST(test_GivenPagesAreInitialized_should_DisplayCorrectTitle);
+        RUN_TEST(test_givenPagesAreInitialized_should_displayCorrectTitle);
+        RUN_TEST(test_givenNewDescriptionAdded_should_correctlyChangeDescription);
+        RUN_TEST(test_givenNewOptionAdded_should_correctlyAddNewOption);
         return UNITY_END();
 }
 

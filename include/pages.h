@@ -19,36 +19,50 @@
 // LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
+#include <stdio.h>
 #include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
 
+
 /*
- * Page
- * ----
+ * IDs that represent page types. Can be modified as needed depending on
+ * the application.
+ */
+typedef enum {
+        MISC_PAGE,
+        SAVE_PAGE,
+        NULL_PAGE
+} P_TYPE;
+
+/*
  * Stores all the information that one might need to use a pagination system.
  * Attrs:
+ * id - id describing page.
+ * desc - string describing page.
  * len - length of options array.
+ * cap - capacity of options array.
  * selected - currently selected option in options array.
- * dealloc_idx - index of branch being deallocated.
  * prev - the previous Page struct that was accessed.
  * options - array of Page structs that can be moved to.
  * load - pointer to function to be executed when page is created.
+ * dealloc_idx - index of branch being deallocated.
  */
 struct Page {
+        P_TYPE id;
+        char *desc;
         uint32_t len;
+        uint32_t cap;
         uint32_t selected;
-        uint32_t dealloc_idx;
         struct Page *prev;
-        struct Page *options;
+        struct Page **options;
         void *load;
+        uint32_t dealloc_idx;
 };
 
 
 /*
- * Pages
- * -----
  * Handler for each page.
  * Attrs:
  * title - Title of system using the paginator. Will be displayed at all times.
@@ -63,19 +77,25 @@ struct Pages {
 
 
 /*
- * pages_init
- * ----------
+ * Initializes a page passed to the function.
+ * Params:
+ * desc - page description.
+ * id - type of page.
+ */
+void page_init(struct Page *page, char *desc, P_TYPE id);
+
+
+/*
  * Initializes the title, and NULL initializes the first page.
  * Params:
  * pages - Pages struct to be initialized.
  * title - title to be used for the Pages struct.
+ * id - type of page.
  */
-void pages_init(struct Pages *pages, char *title);
+void pages_init(struct Pages *pages, char *title, P_TYPE id);
 
 
 /*
- * _destroy_pages
- * --------------
  * Internal helper for destroy_pages defined below this function. Allows
  * The function to be called recursively.
  * Params:
@@ -85,11 +105,28 @@ void _destroy_pages(struct Page *page);
 
 
 /*
- * destroy_pages
- * -------------
  * Destroys all allocated members of the Pages struct.
  * Params:
  * pages - Pages struct to be destroyed.
  */
 void destroy_pages(struct Pages *pages);
+
+
+/*
+ * Sets the description of a page.
+ * Params:
+ * page - pointer to page being modified.
+ * desc - new description for page.
+ */
+void set_page_desc(struct Page *page, char *desc);
+
+
+/*
+ * Adds an option to the page being specified.
+ * Params:
+ * page - pointer to page being modified.
+ * desc - description for new page.
+ * id - type of page being added.
+ */
+void add_page_option(struct Page *page, char *desc, P_TYPE id);
 
