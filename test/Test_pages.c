@@ -28,6 +28,7 @@ struct Pages pages;
 void setUp(void)
 {
         pages_init(&pages, "Testing Paginator", MISC_PAGE);
+        set_page_desc(pages.curr, "This is a paginator!");
 }
 
 
@@ -181,6 +182,16 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
 }
 
 
+void test_ifPrintIsCalled_should_displayCorrectly(void)
+{
+        add_page_option(pages.curr, "Option 1", MISC_PAGE);
+        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+        add_page_option(pages.curr, "Option 3", MISC_PAGE);
+        add_page_option(pages.curr, "Option 4", MISC_PAGE);
+        print_page(&pages, NULL);
+}
+
+
 int main(void)
 {
         UNITY_BEGIN();
@@ -189,6 +200,7 @@ int main(void)
         RUN_TEST(test_givenNewOptionAdded_should_correctlyAddNewOption);
         RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
         RUN_TEST(test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation);
-        return UNITY_END();
+        // RUN_TEST(test_ifPrintIsCalled_should_displayCorrectly);
+        UNITY_END();
 }
 

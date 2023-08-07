@@ -130,3 +130,13 @@ void set_page_desc(struct Page *page, char *desc);
  */
 void add_page_option(struct Page *page, char *desc, P_TYPE id);
 
+
+/*
+ * Prints a page out. If page is set to NULL, it will print the page that is
+ * currently set to curr in the pages struct.
+ * Params:
+ * pages - pages struct holding all pages.
+ * page - specific page to be printed.
+ */
+void print_page(struct Pages *pages, struct Page *page);
+

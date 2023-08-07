@@ -121,3 +121,31 @@ void add_page_option(struct Page *page, char *desc, P_TYPE id)
         page->len++;
 }
 
+
+void print_page(struct Pages *pages, struct Page *page)
+{
+        struct Page *page_to_print;
+
+        // Handle whether or not page is NULL.
+        if (!page) {
+                page_to_print = pages->curr;
+        } else {
+                page_to_print = page;
+        }
+
+        printf("%s\n", pages->title);
+        for (int i = 0; i < strlen(pages->title); i++) {
+                putchar('_');
+        }
+        putchar('\n');
+
+        printf("%s\n", page_to_print->desc);
+        for (int i = 0; i < page_to_print->len; i++) {
+                if (i == page_to_print->selected) {
+                        printf("> %s\n", page_to_print->options[i]->desc);
+                } else {
+                        printf("  %s\n", page_to_print->options[i]->desc);
+                }
+        }
+}
+
