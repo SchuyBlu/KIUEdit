@@ -24,6 +24,7 @@
 #include <stdint.h>
 #include <string.h>
 #include <assert.h>
+#define BIT(n) (1U<<(n))
 
 
 /*

@@ -198,41 +198,36 @@ void test_givenPageIsFlipped_then_newCurrentShouldBeUpdated(void)
 
         // First try to flip back. Nothing should happen and it should reamin
         // on the root page.
-        switch_page(&pages, 1);
+        switch_page(&pages, BIT(1));
         TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
 
         // Now test flipping forward.
-        switch_page(&pages, 0);
+        switch_page(&pages, BIT(0));
         TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
 
         // Now test flipping forward again. Nothing should happen and it should
         // remain on the Option 1 page.
-        switch_page(&pages, 0);
+        switch_page(&pages, BIT(0));
         TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
 
         // Now test flipping back again. This time it should work, and should
         // return to the root page.
-        switch_page(&pages, 1);
+        switch_page(&pages, BIT(1));
         TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
 
         // Now change the selected index to 1. Should move it into the
         // Option 2 page.
         pages.curr->selected = 1;
-        switch_page(&pages, 0);
+        switch_page(&pages, BIT(0));
         TEST_ASSERT_EQUAL_STRING("Option 2", pages.curr->desc);
 
         // Now switch back again. This time make sure the root and curr pages are
         // equal.
-        switch_page(&pages, 1);
+        switch_page(&pages, BIT(1));
         TEST_ASSERT_EQUAL_UINT64(pages.curr, pages.root);
 }
 
 
-// NOTE: This test will currently fail, as I currently do not understand
-// how the kDown bitmask is supposed to be formatted (kDown in this case
-// being the second parameter of move_page_cursor. Until I learn how
-// the bitmask is supposed to be formed, this will not be automatically
-// tested on, and will need to be tested once I understand it's format.
 void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
 {
         add_page_option(pages.curr, "Option 1", MISC_PAGE);
@@ -242,32 +237,69 @@ void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
 
         TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected);
 
-        move_page_cursor(&pages, 7);
+        move_page_cursor(&pages, BIT(7));
         TEST_ASSERT_EQUAL_UINT32(1, pages.curr->selected);
 
-        move_page_cursor(&pages, 7);
+        move_page_cursor(&pages, BIT(7));
         TEST_ASSERT_EQUAL_UINT32(2, pages.curr->selected);
 
-        move_page_cursor(&pages, 7);
+        move_page_cursor(&pages, BIT(7));
         TEST_ASSERT_EQUAL_UINT32(3, pages.curr->selected);
 
         // First significant check. Should wrap around and be 0.
-        move_page_cursor(&pages, 7);
+        move_page_cursor(&pages, BIT(7));
         TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected); 
 
         // Now move back up. Should wrap around and be 3.
-        move_page_cursor(&pages, 6);
+        move_page_cursor(&pages, BIT(6));
         TEST_ASSERT_EQUAL_UINT32(3, pages.curr->selected);
 
         // Now move back up to 0.
-        move_page_cursor(&pages, 6);
+        move_page_cursor(&pages, BIT(6));
         TEST_ASSERT_EQUAL_UINT32(2, pages.curr->selected);
 
-        move_page_cursor(&pages, 6);
+        move_page_cursor(&pages, BIT(6));
         TEST_ASSERT_EQUAL_UINT32(1, pages.curr->selected);
 
-        move_page_cursor(&pages, 6);
+        move_page_cursor(&pages, BIT(6));
         TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected);
+}
+
+
+void test_ifCursorIsMovedAndPageIsFlipped_should_enterCorrectPage(void)
+{
+        add_page_option(pages.curr, "Option 1", MISC_PAGE);
+        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+
+        // We know we can enter the first option so it doesn't need testing.
+        // Instead, let's test the following instructions:
+        // 1. Move cursor to Option 2.
+        // 2. Enter Option 2 and check that it is Option 2.
+        // 3. Exit to root.
+        // 4. Move cursor DOWN which will wrap to Option 1.
+        // 5. Enter Option 1 and check that it is Option 1.
+        // 6. Exit back to root and check that it is root.
+
+        // 1.
+        move_page_cursor(&pages, BIT(7));
+
+        // 2.
+        switch_page(&pages, BIT(0));
+        TEST_ASSERT_EQUAL_STRING("Option 2", pages.curr->desc); 
+
+        // 3.
+        switch_page(&pages, BIT(1));
+
+        // 4.
+        move_page_cursor(&pages, BIT(7));
+
+        // 5.
+        switch_page(&pages, BIT(0));
+        TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
+
+        // 6.
+        switch_page(&pages, BIT(1));
+        TEST_ASSERT_EQUAL_UINT64(pages.root, pages.curr);
 }
 
 
@@ -279,8 +311,8 @@ int main(void)
         RUN_TEST(test_givenNewOptionAdded_should_correctlyAddNewOption);
         RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
         RUN_TEST(test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation);
-        // RUN_TEST(test_ifPrintIsCalled_should_displayCorrectly);
-        //RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
+        RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
+        RUN_TEST(test_ifCursorIsMovedAndPageIsFlipped_should_enterCorrectPage);
         UNITY_END();
 }
 

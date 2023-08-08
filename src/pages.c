@@ -152,14 +152,12 @@ void print_page(struct Pages *pages, struct Page *page)
 
 void switch_page(struct Pages *pages, uint32_t k_down)
 {
-        // If button is B and  previous page exists, switch to it.
-        if (k_down == 1 && pages->curr->prev) {
+        if (k_down & BIT(1) && pages->curr->prev) {
                 pages->curr = pages->curr->prev;
                 return;
         }
 
-        // If button is A and pages exist, switch to them.
-        if (k_down == 0 && pages->curr->len > 0) {
+        if (k_down & BIT(0) && pages->curr->len > 0) {
                 pages->curr = pages->curr->options[pages->curr->selected];
         }
 }
@@ -167,18 +165,14 @@ void switch_page(struct Pages *pages, uint32_t k_down)
 
 void move_page_cursor(struct Pages *pages, uint32_t k_down)
 {
-        // Using 7 instead of KEY_DDOWN to allow this module to function
-        // without needing to include the 3ds.h library.
-        if (k_down & 7) {
+        if (k_down & BIT(7)) {
                 pages->curr->selected++;
                 if (pages->curr->selected >= pages->curr->len) {
                         pages->curr->selected = 0;
                 }
         }
 
-        // Using 6 instead of KEY_DUP to allow this module to function
-        // without needing to include the 3ds.h library.
-        if (k_down & 6) {
+        if (k_down & BIT(6)) {
                 pages->curr->selected--;
                 if (pages->curr->selected < 0) {
                         pages->curr->selected = pages->curr->len - 1;
