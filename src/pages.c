@@ -164,3 +164,25 @@ void switch_page(struct Pages *pages, uint32_t k_down)
         }
 }
 
+
+void move_page_cursor(struct Pages *pages, uint32_t k_down)
+{
+        // Using 7 instead of KEY_DDOWN to allow this module to function
+        // without needing to include the 3ds.h library.
+        if (k_down & 7) {
+                pages->curr->selected++;
+                if (pages->curr->selected >= pages->curr->len) {
+                        pages->curr->selected = 0;
+                }
+        }
+
+        // Using 6 instead of KEY_DUP to allow this module to function
+        // without needing to include the 3ds.h library.
+        if (k_down & 6) {
+                pages->curr->selected--;
+                if (pages->curr->selected < 0) {
+                        pages->curr->selected = pages->curr->len - 1;
+                }
+        }
+}
+

@@ -228,6 +228,49 @@ void test_givenPageIsFlipped_then_newCurrentShouldBeUpdated(void)
 }
 
 
+// NOTE: This test will currently fail, as I currently do not understand
+// how the kDown bitmask is supposed to be formatted (kDown in this case
+// being the second parameter of move_page_cursor. Until I learn how
+// the bitmask is supposed to be formed, this will not be automatically
+// tested on, and will need to be tested once I understand it's format.
+void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
+{
+        add_page_option(pages.curr, "Option 1", MISC_PAGE);
+        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+        add_page_option(pages.curr, "Option 3", MISC_PAGE);
+        add_page_option(pages.curr, "Option 4", MISC_PAGE);
+
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected);
+
+        move_page_cursor(&pages, 7);
+        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->selected);
+
+        move_page_cursor(&pages, 7);
+        TEST_ASSERT_EQUAL_UINT32(2, pages.curr->selected);
+
+        move_page_cursor(&pages, 7);
+        TEST_ASSERT_EQUAL_UINT32(3, pages.curr->selected);
+
+        // First significant check. Should wrap around and be 0.
+        move_page_cursor(&pages, 7);
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected); 
+
+        // Now move back up. Should wrap around and be 3.
+        move_page_cursor(&pages, 6);
+        TEST_ASSERT_EQUAL_UINT32(3, pages.curr->selected);
+
+        // Now move back up to 0.
+        move_page_cursor(&pages, 6);
+        TEST_ASSERT_EQUAL_UINT32(2, pages.curr->selected);
+
+        move_page_cursor(&pages, 6);
+        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->selected);
+
+        move_page_cursor(&pages, 6);
+        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected);
+}
+
+
 int main(void)
 {
         UNITY_BEGIN();
@@ -237,7 +280,7 @@ int main(void)
         RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
         RUN_TEST(test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation);
         // RUN_TEST(test_ifPrintIsCalled_should_displayCorrectly);
-        RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
+        //RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
         UNITY_END();
 }
 

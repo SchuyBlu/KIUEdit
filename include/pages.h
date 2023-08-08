@@ -153,3 +153,13 @@ void print_page(struct Pages *pages, struct Page *page);
  */
 void switch_page(struct Pages *pages, uint32_t k_down);
 
+
+/*
+ * Moves the cursor to the next option depending on the input given. Will
+ * wrap around if the cursor moves beyond the length of the options list.
+ * Params:
+ * pages - pages being processed.
+ * k_down - key being pressed down.
+ */
+void move_page_cursor(struct Pages *pages, uint32_t k_down);
+
