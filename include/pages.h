@@ -140,3 +140,16 @@ void add_page_option(struct Page *page, char *desc, P_TYPE id);
  */
 void print_page(struct Pages *pages, struct Page *page);
 
+
+/*
+ * Switches the page depending on the input given in k_down. If k_down is
+ * 0, it switches to the selected page, if k_down is 1 it switches to the
+ * previous page.
+ * NOTE: While in the function definition the key being pressed down is vague,
+ * it is meant for the 3ds.h library in production.
+ * Params:
+ * pages - pages being processed.
+ * k_down - key being pressed down.
+ */
+void switch_page(struct Pages *pages, uint32_t k_down);
+

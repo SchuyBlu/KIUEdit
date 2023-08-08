@@ -72,7 +72,6 @@ void test_givenAThirdLevelPage_should_beConstructedCorrectly(void)
         // are multiple layers deep are being freed correctly, but testing
         // for this is being handled by the address sanitizer.
         struct Page *page, *new_page;
-        struct Page *prev_page;
 
         // We know this works because it's tested in the last test.
         add_page_option(pages.curr, "New option.", MISC_PAGE);
@@ -192,6 +191,43 @@ void test_ifPrintIsCalled_should_displayCorrectly(void)
 }
 
 
+void test_givenPageIsFlipped_then_newCurrentShouldBeUpdated(void)
+{
+        add_page_option(pages.curr, "Option 1", MISC_PAGE);
+        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+
+        // First try to flip back. Nothing should happen and it should reamin
+        // on the root page.
+        switch_page(&pages, 1);
+        TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
+
+        // Now test flipping forward.
+        switch_page(&pages, 0);
+        TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
+
+        // Now test flipping forward again. Nothing should happen and it should
+        // remain on the Option 1 page.
+        switch_page(&pages, 0);
+        TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
+
+        // Now test flipping back again. This time it should work, and should
+        // return to the root page.
+        switch_page(&pages, 1);
+        TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
+
+        // Now change the selected index to 1. Should move it into the
+        // Option 2 page.
+        pages.curr->selected = 1;
+        switch_page(&pages, 0);
+        TEST_ASSERT_EQUAL_STRING("Option 2", pages.curr->desc);
+
+        // Now switch back again. This time make sure the root and curr pages are
+        // equal.
+        switch_page(&pages, 1);
+        TEST_ASSERT_EQUAL_UINT64(pages.curr, pages.root);
+}
+
+
 int main(void)
 {
         UNITY_BEGIN();
@@ -201,6 +237,7 @@ int main(void)
         RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
         RUN_TEST(test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation);
         // RUN_TEST(test_ifPrintIsCalled_should_displayCorrectly);
+        RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
         UNITY_END();
 }
 

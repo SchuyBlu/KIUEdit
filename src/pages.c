@@ -149,3 +149,18 @@ void print_page(struct Pages *pages, struct Page *page)
         }
 }
 
+
+void switch_page(struct Pages *pages, uint32_t k_down)
+{
+        // If button is B and  previous page exists, switch to it.
+        if (k_down == 1 && pages->curr->prev) {
+                pages->curr = pages->curr->prev;
+                return;
+        }
+
+        // If button is A and pages exist, switch to them.
+        if (k_down == 0 && pages->curr->len > 0) {
+                pages->curr = pages->curr->options[pages->curr->selected];
+        }
+}
+
