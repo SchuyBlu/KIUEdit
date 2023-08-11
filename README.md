@@ -16,7 +16,7 @@ make test
 ```
 The output to the terminal will only show failed tests and any output from the address sanitizer. You'll find a file containing all reports in `/build/test/results/` with a different text file for each source test file.
 
-### Issues
+## Issues
 Currently most code in `test/Test_file.c` won't work as it relies on an input save file. I intend to write a script that will generate a mock save file, but as it stands I'm unwilling to add a genuine save file from a 3DS game to a github repo.
 
 For the time being, `make 3ds` will fail, as there is no `src/main.c` file. This will change as development continues.
