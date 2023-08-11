@@ -25,6 +25,7 @@
 
 struct Pages pages;
 
+
 void setUp(void)
 {
         pages_init(&pages, "Testing Paginator", MISC_PAGE);

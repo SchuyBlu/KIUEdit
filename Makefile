@@ -30,6 +30,10 @@ SANITIZE=-fsanitize=address
 .PRECIOUS: $(PATHR)%.txt
 .PRECIOUS: $(PATHO)%.o
 
+# Build 3DS files.
+3ds:
+	@make -f Makefile.3ds
+
 # Checks test result files and outputs failures and ignores
 test: $(BUILD_PATHS) $(RESULTS)
 	@echo -e "--------------------\nIGNORES:\n--------------------"
@@ -69,6 +73,7 @@ $(PATHR):
 	mkdir -p $(PATHR)
 
 clean:
+	@make -sf Makefile.3ds clean
 	rm -f $(PATHO)*.o
 	rm -f $(PATHB)*.out
 	rm -f $(PATHR)*.txt
