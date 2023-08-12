@@ -23,7 +23,7 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
-#define HEART_OFFSET 0x000001E8
+#include "offsets.h"
 
 
 /*
@@ -42,6 +42,22 @@ struct SaveFile {
         uint32_t donate_v;
 };
 
+/*
+ * Retrieves and returns hearts from varying locations and returns as a u32 int.
+ * Params:
+ * save - save file struct.
+ * offset - offset to start reading from in save file.
+ */
+uint32_t _retrieve_hearts(struct SaveFile *save, D_OFFSET offset);
+
+
+/*
+ * Retrieves save file hearts and stores them in SaveFile struct passed to
+ * function.
+ * Params:
+ * save - save file struct to be saved into.
+ */
+void fetch_savefile_hearts(struct SaveFile *save);
 
 /*
  * Initializes save file pointers to NULL and integers to zero.
@@ -58,13 +74,4 @@ void savefile_init(struct SaveFile *save, char *path);
  * save - pointer to save file struct to be destroyed.
  */
 void destroy_savefile(struct SaveFile *save);
-
-
-/*
- * Retrieves hearts from varying locations and returns as a u32 int.
- * Params:
- * save - save file struct.
- * offset - offset to start reading from in save file.
- */
-uint32_t _retrieve_hearts(struct SaveFile *save, int offset);
 
