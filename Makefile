@@ -36,11 +36,11 @@ SANITIZE=-fsanitize=address
 
 # Checks test result files and outputs failures and ignores
 test: $(BUILD_PATHS) $(RESULTS)
-	@echo -e "--------------------\nIGNORES:\n--------------------"
+	@echo  "--------------------\nIGNORES:\n--------------------"
 	@echo `grep -s IGNORE $(PATHR)*.txt`
-	@echo -e "--------------------\nFAILURES:\n--------------------"
+	@echo  "--------------------\nFAILURES:\n--------------------"
 	@echo `grep -s FAIL $(PATHR)*.txt`
-	@echo -e "--------------------\nADDRESS SANITIZER:\n--------------------"
+	@echo  "--------------------\nADDRESS SANITIZER:\n--------------------"
 	@echo "$$(awk '/==.*==ERROR/,/allocation(s)./' $(PATHR)*.txt)"
 	@echo "DONE"
 

@@ -1,26 +1,40 @@
-FROM ubuntu:20.04
+FROM debian:buster-slim
 
-# Copy all files into container
-COPY . .
+MAINTAINER Dave Murphy <davem@devkitpro.org>
 
-ARG DEBIAN_FRONTEND=noninteractive
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install base dependencies
-RUN apt-get update && \
-apt-get install -y gcc make wget vim git && \
-git clone https://github.com/ThrowTheSwitch/Unity && \
-mv Unity unity
+COPY . ./KIUEdit/
 
-# Install devkitpro
-RUN wget https://apt.devkitpro.org/install-devkitpro-pacman && \
-echo "$(head -n -2 ./install-devkitpro-pacman)" > ./install-devkitpro-pacman && \
-chmod +x ./install-devkitpro-pacman && \
-./install-devkitpro-pacman && \
-apt-get update && \
-apt-get install -y devkitpro-pacman && \
-ln -s /proc/mounts /etc/mtab && \
-dkp-pacman --noconfirm -S libctru 3dslink
+RUN echo "deb http://deb.debian.org/debian buster-backports main" > /etc/apt/sources.list.d/buster-backports.list && \
+    apt-get update && apt-get upgrade -y && \
+    apt-get install -y --no-install-recommends apt-utils && \
+    apt-get install -y --no-install-recommends sudo ca-certificates pkg-config curl wget bzip2 xz-utils make bsdtar doxygen gnupg && \
+    apt-get install -y --no-install-recommends git git-restore-mtime && \
+    apt-get install -y --no-install-recommends cmake/buster-backports zip unzip && \
+    apt-get install -y --no-install-recommends locales && \
+    apt-get install -y --no-install-recommends patch && \
+    apt-get install -y  vim && \
+    apt-get install -y  gcc && \
+    apt-get install -y build-essential && \
+    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
+    dpkg-reconfigure --frontend=noninteractive locales && \
+    update-locale LANG=en_US.UTF-8 && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN ln -s /proc/mounts /etc/mtab && \
+    wget https://apt.devkitpro.org/install-devkitpro-pacman && \
+    chmod +x ./install-devkitpro-pacman && \
+    ./install-devkitpro-pacman && \
+    rm ./install-devkitpro-pacman && \
+    yes | dkp-pacman -S libctru 3dslink devkitARM
+
+ENV LANG en_US.UTF-8
 
 ENV DEVKITPRO=/opt/devkitpro
+ENV DEVKITARM=/opt/devkitpro/devkitARM
 ENV PATH=${DEVKITPRO}/tools/bin:$PATH
+
+WORKDIR /KIUEdit/
 
