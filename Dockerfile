@@ -47,9 +47,10 @@ RUN apt-get install -y nodejs && \
 ENV HOME "/${USERNAME}/home"
 WORKDIR "${HOME}"
 COPY . ./KIUEdit/
-RUN ln -s /bin/bash /usr/bin/bash && \
-addgroup --gid 1000 "${USERNAME}" && \
-adduser --disabled-password --gecos "" --uid  1000 --gid 1000 "${USERNAME}"
+RUN git clone https://github.com/ThrowTheSwitch/Unity.git unity && \
+    ln -s /bin/bash /usr/bin/bash && \
+    addgroup --gid 1000 "${USERNAME}" && \
+    adduser --disabled-password --gecos "" --uid  1000 --gid 1000 "${USERNAME}"
 
 # Set up bashrc
 RUN echo 'PS1='"'"'\[\e[1;32m\]\u@\h \[\e[1;33m\][\W]\[\e[1;32m\]$\[\e[0;37m\] '"'" >> "${HOME}/.bashrc" && \
