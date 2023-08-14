@@ -2,14 +2,14 @@
 KIUEdit is a save editor for Kid Icarus: Uprising on the 3DS. The application runs natively on the hardware, and can edit hearts, hearts donated to either Palutena or Viridi, and can edit the stars, modifiers, and types of weapons.
 
 ## Building
-# Building without Docker
+### Building without Docker
 To build you'll need a copy of [devkitPro](https://devkitpro.org/wiki/Getting_Started). After installing, you can execute the following commands to build.
 ```
 git clone https://github.com/SchuyBlu/KIUEdit.git
 cd ./KIUEdit
 make 3ds
 ```
-# Building with Docker
+### Building with Docker
 Building and debugging with docker is fairly straightforward. You'll need to install [Docker](https://www.docker.com/). The following commands will create a running container you can debug and build in.
 ```
 git clone https://github.com/SchuyBlu/KIUEdit.git
