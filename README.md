@@ -14,10 +14,11 @@ Building and debugging with docker is fairly straightforward. You'll need to ins
 ```
 git clone https://github.com/SchuyBlu/KIUEdit.git
 cd ./KIUEdit
-docker build -t devkitpro .
+docker build --build-arg USERNAME="user" -t devkitpro .
 docker run --name kiu -d -t devkitpro
+docker exec -i -t kiu /usr/bin/bash
 ```
-You can run all `make` commands by prefixing them with `docker exec kiu`. When you're ready to exit, call `docker stop kiu`.
+You can build the application within this environment as well as run all tests.
 
 ## Testing
 To run tests you'll need to install the  [Unity Test](https://github.com/ThrowTheSwitch/Unity) unit testing framework. You'll need a copy of it in the root directory of the project. If your system is case sensitive, make sure you rename the `Unity` directory to `unity`. You can run the following to run each test.
