@@ -4,9 +4,6 @@
 *.smdh
 build
 
-# Temporarily ignore testing input
-test/input
-
 # Vim related files
 *.json
 
