@@ -47,7 +47,7 @@ RUN apt-get install -y nodejs && \
 ENV HOME "/${USERNAME}/home"
 WORKDIR "${HOME}"
 COPY . ./KIUEdit/
-RUN git clone https://github.com/ThrowTheSwitch/Unity.git unity && \
+RUN git clone https://github.com/ThrowTheSwitch/Unity.git "${HOME}/KIUEdit/unity" && \
     ln -s /bin/bash /usr/bin/bash && \
     addgroup --gid 1000 "${USERNAME}" && \
     adduser --disabled-password --gecos "" --uid  1000 --gid 1000 "${USERNAME}"
