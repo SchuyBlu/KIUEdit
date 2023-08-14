@@ -1,7 +1,5 @@
 FROM debian:buster-slim
 
-MAINTAINER Dave Murphy <davem@devkitpro.org>
-
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY . ./KIUEdit/
@@ -17,6 +15,13 @@ RUN echo "deb http://deb.debian.org/debian buster-backports main" > /etc/apt/sou
     apt-get install -y  vim && \
     apt-get install -y  gcc && \
     apt-get install -y build-essential && \
+    apt-get install -y curl && \
+    type -p curl >/dev/null || (apt-get update && apt-get install curl -y) && \
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg && \
+    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | tee /etc/apt/sources.list.d/github-cli.list > /dev/null && \
+    apt-get update &&\
+    apt-get install gh -y && \
     sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
     dpkg-reconfigure --frontend=noninteractive locales && \
     update-locale LANG=en_US.UTF-8 && \
