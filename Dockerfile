@@ -3,7 +3,7 @@ FROM debian:buster-slim
 ARG USERNAME
 
 ENV DEBIAN_FRONTEND=noninteractive
-ENV TERM=xterm-256color
+ENV TERM=xterm
 ENV LANG en_US.UTF-8
 
 # Install C development tools, git, and gh CLI tools
