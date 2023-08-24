@@ -13,5 +13,3 @@ unity
 # Ignore notes
 ./*.txt
 
-# Ignore clangd related files
-compile_flags.txt

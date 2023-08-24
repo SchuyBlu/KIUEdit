@@ -1,0 +1,5 @@
+-I./include
+-I./unity/src
+-I$(DEVKITPRO)/devkitARM/arm-none-eabi/include
+-Wall
+-g
