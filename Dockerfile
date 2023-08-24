@@ -39,9 +39,11 @@ RUN ln -s /proc/mounts /etc/mtab && \
     rm ./install-devkitpro-pacman && \
     yes | dkp-pacman -S libctru 3dslink devkitARM
 
-# Install nodejs and vim
-RUN apt-get install -y nodejs && \
-    apt-get install -y vim
+# Install nodejs, vim, and neovim
+RUN apt-get install -y npm nodejs && \
+	wget https://github.com/neovim/neovim/releases/download/stable/nvim.appimage && \
+	chmod +x nvim.appimage && \
+	mv nvim.appimage /usr/bin/
 
 # Set up user and copy files.
 ENV HOME "/${USERNAME}/home"
@@ -60,7 +62,8 @@ RUN echo 'PS1='"'"'\[\e[1;32m\]\u@\h \[\e[1;33m\][\W]\[\e[1;32m\]$\[\e[0;37m\] '
     echo '    alias grep="grep --color=auto"' >> "${HOME}/.bashrc" && \
     echo '    alias fgrep="fgrep --color=auto"' >> "${HOME}/.bashrc" && \
     echo '    alias egrep="egrep --color=auto"' >> "${HOME}/.bashrc" && \
-    echo 'fi' >> "${HOME}/.bashrc"
+    echo 'fi' >> "${HOME}/.bashrc" && \
+	echo 'alias nvim="nvim.appimage --appimage-extract-and-run"' >> "${HOME}/.bashrc"
 
 # Change ownership of home directory and all it's contents from root
 # to the user and user group.
