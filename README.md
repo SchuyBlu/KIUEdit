@@ -2,13 +2,16 @@
 KIUEdit is a save editor for Kid Icarus: Uprising on the 3DS. The application runs natively on the hardware, and can edit hearts, hearts donated to either Palutena or Viridi, and can edit the stars, modifiers, and types of weapons.
 
 ## Building
+### Requirements
+[Docker](https://www.docker.com/) is recommended to build the application within a controlled environment. However, it is also possible to build outside of a docker container. If you choose to do so, you will need to install [devkitpro](https://devkitpro.org/wiki/Getting_Started) and install `libctru`.
+
 ### Building Release
-To build the release call `make release` from the root of the directory.
+To build the release call `make release` from the root of the directory. **NOTE: This will not work without Docker installed and running.**
 
 ### Building within Docker Environment
 Building and debugging with docker is fairly straightforward. You can run `./start_docker.sh`, which will build the required image and attach the docker image immediately. To see how to use the script please call `./start_docker.sh -h`.
 
-You are able to build the application within the docker container by call `make 3ds`. Please note that `make release` won't work as the rule calls docker commands.
+You are also able to build the application by calling `make 3ds`. This will simply build the application, unlike `make release` which will build the application within a docker container.
 
 ## Testing
 To run tests you'll need to install the  [Unity Test](https://github.com/ThrowTheSwitch/Unity) unit testing framework. You'll need a copy of it in the root directory of the project, which you should have running within a docker container. Please rename the testing framework directory to `unity` if it isn't already named so. You can run the following to run each test.
