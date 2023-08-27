@@ -21,7 +21,7 @@ The output to the terminal will only show failed tests and any output from the a
 The following features currently are incomplete:
 - `make release`
 - `make 3ds`
-- `start_docker.sh` needs a way to clean the docker image. Likely will store image data through a JSON file.
+- `start_docker.sh` needs a way to remove the docker image and container. Likely will store image data through a JSON file.
 
 ## Issues
 Currently most code in `test/Test_file.c` won't work as it relies on an input save file. I intend to write a script that will generate a mock save file, but as it stands I'm unwilling to add a genuine save file from a 3DS game to a github repo.
