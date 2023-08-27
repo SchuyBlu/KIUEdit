@@ -1,6 +1,4 @@
-FROM debian:buster-slim
-
-SHELL ["/bin/bash", "--login", "-c"]
+FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -16,7 +14,7 @@ ARG GIT_EMAIL=none
 # plugins.
 RUN apt-get update && \
 	apt-get install -y build-essential git curl wget python3 python3-pip \
-	luajit ninja-build gettext cmake unzip zsh nodejs npm
+	luajit ninja-build gettext cmake zip unzip zsh nodejs npm
 
 # Update node and npm
 RUN npm install -g n && \
@@ -78,24 +76,12 @@ RUN git clone --depth 1 https://github.com/SchuyBlu/nvim.git /home/${USERNAME}/.
 # ---------------------------- DEVKITPRO SPECIFIC -----------------------------
 # Install requirements for devkitpro
 USER root
-RUN echo "deb http://deb.debian.org/debian buster-backports main" > /etc/apt/sources.list.d/buster-backports.list && \
-    apt-get update && apt-get upgrade -y && \
-    apt-get install -y --no-install-recommends apt-utils && \
-    apt-get install -y --no-install-recommends sudo ca-certificates pkg-config bzip2 xz-utils make bsdtar doxygen gnupg && \
-    apt-get install -y --no-install-recommends cmake/buster-backports zip unzip && \
-    apt-get install -y --no-install-recommends locales && \
-    apt-get install -y --no-install-recommends patch && \
-    sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
-    dpkg-reconfigure --frontend=noninteractive locales && \
-    update-locale LANG=en_US.UTF-8 && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
 
 # Install devkitpro-pacman and devkitpro
 RUN ln -s /proc/mounts /etc/mtab && \
     wget https://apt.devkitpro.org/install-devkitpro-pacman && \
     chmod +x ./install-devkitpro-pacman && \
-    ./install-devkitpro-pacman && \
+     yes "y" | ./install-devkitpro-pacman && \
     rm ./install-devkitpro-pacman && \
     yes | dkp-pacman -S libctru 3dslink devkitARM
 

@@ -4,8 +4,8 @@
 # NOTE: Way to check if git username and email are in use is kinda
 #       hacky, but it works!
 
-IMAGE_NAME="buster_slim"
-CONTAINER_NAME="buster_slim"
+IMAGE_NAME="ubuntu"
+CONTAINER_NAME="ubuntu"
 USERNAME="user"
 GIT_NAME="none"
 GIT_EMAIL="none"

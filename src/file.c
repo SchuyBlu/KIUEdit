@@ -25,13 +25,12 @@
 uint32_t _retrieve_hearts(struct SaveFile *save, D_OFFSET offset)
 {
         // Set heart buffer to three because I'm only seeking out 3 bytes
-        char heart_buf[3];
-        uint32_t hearts;
+		uint32_t hearts = 0;
 
         // Read three bytes after heart offset into hearts variable
         fseek(save->fp, offset, SEEK_SET);
-        fread(heart_buf, 3, 1, save->fp);
-        memcpy(&hearts, heart_buf, 3);
+        fread(&hearts, 3, 1, save->fp);
+		hearts &= 0xFFFFFF;
 
         return hearts;
 }
