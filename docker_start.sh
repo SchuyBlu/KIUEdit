@@ -2,7 +2,7 @@
 # Author: Schuy
 # Simple script to run docker building install process.
 # NOTE: Way to check if git username and email are in use is kinda
-#		hacky, but it works!
+#       hacky, but it works!
 
 IMAGE_NAME="buster_slim"
 CONTAINER_NAME="buster_slim"
