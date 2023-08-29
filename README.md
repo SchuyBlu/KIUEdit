@@ -6,7 +6,7 @@ KIUEdit is a save editor for Kid Icarus: Uprising on the 3DS. The application ru
 [Docker](https://www.docker.com/) is recommended to build the application within a controlled environment. However, it is also possible to build outside of a docker container. If you choose to do so, you will need to install [devkitpro](https://devkitpro.org/wiki/Getting_Started) and install `libctru`.
 
 ### Building Release
-To build the release call `make release` from the root of the directory. **NOTE: This will not work without Docker installed and running.**
+To build the release call `make release` from the root of the directory. ***This will not work without the required Docker image built and running.***
 
 ### Building within Docker Environment
 Building and debugging with docker is fairly straightforward. You can run `./start_docker.sh`, which will build the required image and attach the docker image immediately. To see how to use the script please call `./start_docker.sh -h`.
@@ -14,7 +14,7 @@ Building and debugging with docker is fairly straightforward. You can run `./sta
 You are also able to build the application by calling `make 3ds`. This will simply build the application, unlike `make release` which will build the application within a docker container.
 
 ## Testing
-To run tests you'll need to install the  [Unity Test](https://github.com/ThrowTheSwitch/Unity) unit testing framework. You'll need a copy of it in the root directory of the project, which you should have running within a docker container. Please rename the testing framework directory to `unity` if it isn't already named so. You can run the following to run each test.
+To run tests you'll need to install the  [Unity Test](https://github.com/ThrowTheSwitch/Unity) unit testing framework. You'll need a copy of it in the root directory of the project, which you should have running within the required docker container. Please rename the testing framework directory to `unity` if it isn't already named so. You can run the following to run each test.
 ```
 make test
 ```
@@ -22,11 +22,18 @@ The output to the terminal will only show failed tests and any output from the a
 
 ## Todo
 The following features currently are incomplete:
+- Translate byte values to associated strings.
+- Read weapon data in save.
+- Display data on 3DS.
+- Add ability to modify data on 3DS.
 - `make release`
 - `make 3ds`
 - `start_docker.sh` needs a way to remove the docker image and container. Likely will store image data through a JSON file.
+- Translate byte values to associated strings.
 
-## Issues
-Currently most code in `test/Test_file.c` won't work as it relies on an input save file. I intend to write a script that will generate a mock save file, but as it stands I'm unwilling to add a genuine save file from a 3DS game to a github repo.
+The following are features that will potentially be added, but are not a priority:
+- Display weapon value.
+- Add new weapons.
+- Modify data shown in the vault.
+- A simple GUI.
 
-For the time being, `make 3ds` will fail, as there is no `src/main.c` file. This will change as development continues.
