@@ -6,7 +6,7 @@ KIUEdit is a save editor for Kid Icarus: Uprising on the 3DS. The application ru
 [Docker](https://www.docker.com/) is recommended to build the application within a controlled environment. However, it is also possible to build outside of a docker container. If you choose to do so, you will need to install [devkitpro](https://devkitpro.org/wiki/Getting_Started) and install `libctru`.
 
 ### Building Release
-To build the release call `make release` from the root of the directory. ***This will not work without the required Docker image built and running.***
+To build the release call `make release` from the root of the directory. ***This will not work without the required Docker daemon running.***
 
 ### Building within Docker Environment
 Building and debugging with docker is fairly straightforward. You can run `./start_docker.sh`, which will build the required image and attach the docker image immediately. To see how to use the script please call `./start_docker.sh -h`.
