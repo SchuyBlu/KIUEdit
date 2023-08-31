@@ -18,6 +18,8 @@ RESULTS=$(patsubst $(PATHT)Test_%.c,$(PATHR)Test_%.txt,$(TSRC))
 
 COMPILE=gcc -c -g
 LINK=gcc -g
+LIBLINK=-l json-c
+DEFINES=-D TEST_BUILD
 CFLAGS=-I. -I$(PATHI) -I$(PATHU)
 SANITIZE=-fsanitize=address
 
@@ -56,7 +58,7 @@ $(PATHO)%.o:: $(PATHT)%.c
 
 # Build src object files
 $(PATHO)%.o:: $(PATHS)%.c
-	$(COMPILE) $(SANITIZE) $(CFLAGS) $< -o $@
+	$(COMPILE) $(SANITIZE) $(CFLAGS) $(DEFINES) $(LIBLINK) $< -o $@
 
 # Build unity object files
 $(PATHO)%.o:: $(PATHU)%.c

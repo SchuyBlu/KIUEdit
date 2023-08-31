@@ -49,7 +49,8 @@ WORKDIR /home/${USERNAME}/workspace
 RUN if [ "${GIT_NAME}" -ne "none" ] && [ "${GIT_EMAIL}" -ne "none" ]; then \
 	git config --global user.name "${GIT_NAME}" \
 	git config --global user.email "${GIT_EMAIL}" \
-	git config --global core.editor "nvim"; \
+	git config --global core.editor "nvim" \
+	git branch main -u <origin/main>; \
 	fi
 
 # Set up zsh (W.I.P)
@@ -73,7 +74,7 @@ RUN git clone --depth 1 https://github.com/SchuyBlu/nvim.git /home/${USERNAME}/.
 	git clone --filter=blob:none --branch=stable https://github.com/folke/lazy.nvim.git /home/$( whoami )/.local/share/nvim && \
 	nvim --headless -c "let &runtimepath.=','.string(\"/home/$( whoami )/.local/share/nvim\") | quit"
 
-# ---------------------------- DEVKITPRO SPECIFIC -----------------------------
+# ---------------------------- KIUEdit SPECIFIC -----------------------------
 # Install requirements for devkitpro
 USER root
 
@@ -84,6 +85,10 @@ RUN ln -s /proc/mounts /etc/mtab && \
      yes "y" | ./install-devkitpro-pacman && \
     rm ./install-devkitpro-pacman && \
     yes | dkp-pacman -S libctru 3dslink devkitARM
+
+# Install project dependencies
+RUN apt-get install -y libjson-c-dev && \
+	yes | dkp-pacman -S 3ds-libjson-c
 
 # Set devkitpro env variables
 ENV DEVKITPRO="/opt/devkitpro"
