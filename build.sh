@@ -31,7 +31,7 @@ check_if_exists() {
 
 build_image() {
 	yes "y" | docker image prune
-	docker build -t ${IMAGE_NAME} .
+	docker build -t "${IMAGE_NAME}" .
 }
 
 
@@ -42,7 +42,7 @@ do
 			help
 			;;
 		r)
-			IMAGE_NAME=${OPTARG}
+			IMAGE_NAME="${OPTARG}"
 			build_image
 			;;
 	esac

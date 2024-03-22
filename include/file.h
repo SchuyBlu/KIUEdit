@@ -28,10 +28,10 @@
  * `donate_v` - viridi heart donations.
  */
 struct SaveFile {
-        FILE *fp;
-        uint32_t hearts;
-        uint32_t donate_p;
-        uint32_t donate_v;
+	FILE *fp;
+	uint32_t hearts;
+	uint32_t donate_p;
+	uint32_t donate_v;
 };
 
 /*

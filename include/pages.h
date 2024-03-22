@@ -16,9 +16,9 @@
  * the application.
  */
 typedef enum {
-        MISC_PAGE,
-        SAVE_PAGE,
-        NULL_PAGE
+	MISC_PAGE,
+	SAVE_PAGE,
+	NULL_PAGE
 } P_TYPE;
 
 /*
@@ -34,15 +34,15 @@ typedef enum {
  * `dealloc_idx` - index of branch being deallocated.
  */
 struct Page {
-        P_TYPE id;
-        char *desc;
-        uint32_t len;
-        uint32_t cap;
-        uint32_t selected;
-        struct Page *prev;
-        struct Page **options;
-        void *load;
-        uint32_t dealloc_idx;
+	P_TYPE id;
+	char *desc;
+	uint32_t len;
+	uint32_t cap;
+	uint32_t selected;
+	struct Page *prev;
+	struct Page **options;
+	void *load;
+	uint32_t dealloc_idx;
 };
 
 
@@ -53,9 +53,9 @@ struct Page {
  * `curr` - current page of paginator.
  */
 struct Pages {
-        char *title;
-        struct Page *root;
-        struct Page *curr;
+	char *title;
+	struct Page *root;
+	struct Page *curr;
 };
 
 
