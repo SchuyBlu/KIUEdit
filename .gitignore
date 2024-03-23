@@ -13,3 +13,5 @@ unity
 # Ignore notes
 ./*.txt
 
+# Docker container keys
+keys

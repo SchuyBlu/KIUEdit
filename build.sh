@@ -24,6 +24,13 @@ help() {
 	exit 0
 }
 
+create_key() {
+	if [ ! -f "./keys/id_rsa_shared" ]; then
+		mkdir keys 2> /dev/null
+		ssh-keygen -t rsa -b 4096 -f ./keys/id_rsa_shared
+	fi
+}
+
 check_for_sshfs() {
 	if [ -z "$( which sshfs )" ]; then
 		echo "Error: Please install sshfs to mount container filesystem."
@@ -32,6 +39,7 @@ check_for_sshfs() {
 }
 
 build_image() {
+	create_key
 	yes "y" | docker image prune
 	docker build -t "${IMAGE_NAME}" .
 }
@@ -49,7 +57,13 @@ mount_container() {
 
 	# Run and retrieve IP address.
 	docker run --name ${CONTAINER_NAME} -dt ${IMAGE_NAME}
+
+	# If the ip with key hasn't been registered, do so now
 	cip=$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME} )
+
+	if [ -z "$( cat ~/.ssh/known_hosts | grep ${cip} )" ]; then
+		ssh-copy-id -i ./keys/id_rsa_shared user@${cip}
+	fi
 
 	# Create /mnt/docker if it doesn't exist
 	if [ ! -d "/mnt/docker" ]; then
@@ -107,8 +121,9 @@ if [ "$1" = "test" ]; then
 	docker exec -w /home/workspace/ test bash -c 'make test'
 elif [ "$1" = "clean" ]; then
 	docker exec -w /home/workspace/ test bash -c "make clean"
+elif [ "$1" = "release" ]; then
+	docker exec -w /home/workspace/ test bash -c "make 3ds"
 elif [ "${REBUILD}" -eq 0 ]; then
-	echo ${REBUILD}
 	echo "Error: Not a valid argument. Please see ./build.sh -h"
 fi
 

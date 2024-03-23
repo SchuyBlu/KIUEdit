@@ -22,7 +22,8 @@ RUN ln -s /proc/mounts /etc/mtab && \
 	chmod +x ./install-devkitpro-pacman && \
 	./install-devkitpro-pacman && \
 	rm ./install-devkitpro-pacman && \
-	yes | dkp-pacman -S libctru 3dslink devkitARM
+	dkp-pacman -S --needed --noconfirm 3ds-dev && \
+	yes | dkp-pacman -Scc
 
 # Install project specific dependencies
 RUN apt-get install -y gcc libjson-c-dev && \
@@ -36,6 +37,13 @@ RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/s
 # Set up basic user.
 RUN useradd -m -s /bin/bash user && \
 	echo "user:password" | chpasswd
+
+RUN mkdir -p /home/user/.ssh
+
+COPY keys/id_rsa_shared /home/user/.ssh/id_rsa
+
+RUN chown -R user:user /home/user/.ssh && \
+	echo "Host docker\n\tStrictHostKeyChecking no\n" >> /home/user/.ssh/config
 
 ENV LANG en_US.UTF-8
 
