@@ -31,9 +31,9 @@ include $(DEVKITARM)/3ds_rules
 #     - icon.png
 #     - <libctru folder>/default_icon.png
 #---------------------------------------------------------------------------------
-TARGET		:=	$(notdir $(CURDIR))
+TARGET		:=	editor
 BUILD		:=	build
-SOURCES		:=	source
+SOURCES		:=	src
 DATA		:=	data
 INCLUDES	:=	include
 GRAPHICS	:=	gfx
@@ -45,6 +45,7 @@ APP_DESCRIPTION := Save file editor for Kid Icarus: Uprising.
 APP_AUTHOR  :=  Feanor
 #ROMFS		:=	romfs
 #GFXBUILD	:=	$(ROMFS)/gfx
+PORTLIB		:= /opt/devkitpro/portlibs/3ds/include/
 
 #---------------------------------------------------------------------------------
 # options for code generation
@@ -136,7 +137,8 @@ export HFILES	:=	$(PICAFILES:.v.pica=_shbin.h) $(SHLISTFILES:.shlist=_shbin.h) \
 
 export INCLUDE	:=	$(foreach dir,$(INCLUDES),-I$(CURDIR)/$(dir)) \
 			$(foreach dir,$(LIBDIRS),-I$(dir)/include) \
-			-I$(CURDIR)/$(BUILD)
+			-I$(CURDIR)/$(BUILD) \
+			-I/opt/devkitpro/portlibs/3ds/include/
 
 export LIBPATHS	:=	$(foreach dir,$(LIBDIRS),-L$(dir)/lib)
 

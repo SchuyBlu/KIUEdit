@@ -15,8 +15,8 @@
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
-#include <json-c/json.h>
 #include "offsets.h"
+#include <json-c/json.h>
 
 
 /*
