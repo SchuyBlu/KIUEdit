@@ -30,7 +30,7 @@ The output to the terminal will only show failed tests and any output from the a
 The following features currently are incomplete:
 - Translate byte values to associated strings.
 - Read weapon data in save.
-- Display data on 3DS.
+- Test arrays.h, archive.h.
 - Add ability to modify data on 3DS.
 - `make release`
 - `make 3ds`

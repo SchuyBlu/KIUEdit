@@ -115,7 +115,7 @@ void print_page(struct Pages *pages, struct Page *page)
 	for (int i = 0; i < strlen(pages->title); i++) {
 		putchar('_');
 	}
-	putchar('\n');
+	printf("\n\n");
 
 	printf("%s\n", page_to_print->desc);
 	for (int i = 0; i < page_to_print->len; i++) {
@@ -151,9 +151,10 @@ void move_page_cursor(struct Pages *pages, uint32_t k_down)
 	}
 
 	if (k_down & BIT(6)) {
-		pages->curr->selected--;
-		if (pages->curr->selected < 0) {
+		if (pages->curr->selected == 0) {
 			pages->curr->selected = pages->curr->len - 1;
+		} else {
+			pages->curr->selected--;
 		}
 	}
 }
