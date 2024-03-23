@@ -28,6 +28,14 @@ RUN ln -s /proc/mounts /etc/mtab && \
 RUN apt-get install -y gcc libjson-c-dev && \
 	yes | dkp-pacman -S 3ds-libjson-c
 
+# Install ssh server dependencies
+RUN apt-get install -y openssh-server
+
+RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# Set up basic user.
+RUN useradd -m -s /bin/bash user && \
+	echo "user:password" | chpasswd
 
 ENV LANG en_US.UTF-8
 
@@ -35,4 +43,8 @@ ENV DEVKITPRO="/opt/devkitpro"
 ENV DEVKITARM="/opt/devkitpro/devkitARM"
 ENV DEVKITPPC="/opt/devkitpro/devkitPPC"
 ENV PATH=${DEVKITPRO}/tools/bin:$PATH
+
+# Setup port and entrypoint for ssh service
+EXPOSE 22
+ENTRYPOINT service ssh start && bash
 
