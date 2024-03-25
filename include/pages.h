@@ -12,36 +12,38 @@
 
 
 /*
- * IDs that represent page types. Can be modified as needed depending on
- * the application.
+ * `Action` is a type of function that is intended to be something of a
+ * polymorphic function. There are, however, some rules to its intended
+ * use, specifically in its parameters.
+ * `pages` - pointer to a Pages struct, defined below. Needs to be cast.
+ * `data` - Pointer to data. Can be anything, but needs to be correctly
+ * cast by the function.
+ * Casting is responsibility of function.
  */
-typedef enum {
-	MISC_PAGE,
-	SAVE_PAGE,
-	NULL_PAGE
-} P_TYPE;
+typedef void (*Action)(void *pages, void *data);
+
 
 /*
  * Stores all the information that one might need to use a pagination system.
- * `id` - id describing page.
  * `desc` - string describing page.
  * `len` - length of options array.
  * `cap` - capacity of options array.
  * `selected` - currently selected option in options array.
  * `prev` - the previous Page struct that was accessed.
  * `options` - array of Page structs that can be moved to.
- * `load` - pointer to function to be executed when page is created.
+ * `action` - pointer to function to be executed upon an action.
+ * `data` - pointer to data that is possibly needed for action function.
  * `dealloc_idx` - index of branch being deallocated.
  */
 struct Page {
-	P_TYPE id;
 	char *desc;
 	uint32_t len;
 	uint32_t cap;
 	uint32_t selected;
 	struct Page *prev;
 	struct Page **options;
-	void *load;
+	Action action;
+	void *data;
 	uint32_t dealloc_idx;
 };
 
@@ -61,19 +63,20 @@ struct Pages {
 
 /*
  * Initializes a page passed to the function.
+ * `page` - page being initialized.
  * `desc` - page description.
- * `id` - type of page.
+ * `action` - Pointer to an Action function.
  */
-void page_init(struct Page *page, char *desc, P_TYPE id);
+void page_init(struct Page *page, char *desc, Action action);
 
 
 /*
  * Initializes the title, and NULL initializes the first page.
  * `pages` - Pages struct to be initialized.
  * `title` - title to be used for the Pages struct.
- * id - type of page.
+ * `action` - Action to apply to the first page.
  */
-void pages_init(struct Pages *pages, char *title, P_TYPE id);
+void pages_init(struct Pages *pages, char *title, Action action);
 
 
 /*
@@ -103,9 +106,10 @@ void set_page_desc(struct Page *page, char *desc);
  * Adds an option to the page being specified.
  * `page` - pointer to page being modified.
  * `desc` - description for new page.
- * `id` - type of page being added.
+ * `action` - function defining the action for the page.
+ * Returns a pointer to the new page.
  */
-void add_page_option(struct Page *page, char *desc, P_TYPE id);
+struct Page *add_page_option(struct Page *page, char *desc, Action action);
 
 
 /*
@@ -126,7 +130,7 @@ void print_page(struct Pages *pages, struct Page *page);
  * `pages` - pages being processed.
  * `k_down` - key being pressed down.
  */
-void switch_page(struct Pages *pages, uint32_t k_down);
+void switch_page(void *pages_ptr, void *k_down_ptr);
 
 
 /*

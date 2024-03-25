@@ -1,7 +1,7 @@
 #include "pages.h"
 
 
-void page_init(struct Page *page, char *desc, P_TYPE id)
+void page_init(struct Page *page, char *desc, Action action)
 {
 	if (!desc) {
 		page->desc = NULL;
@@ -11,18 +11,18 @@ void page_init(struct Page *page, char *desc, P_TYPE id)
 		strcpy(page->desc, desc);
 	}
 
-	page->id = id;
 	page->len = 0;
 	page->cap = 1;
 	page->selected = 0;
 	page->dealloc_idx = 0;
 	page->prev = NULL;
 	page->options = NULL;
-	page->load = NULL;
+	page->action = action;
+	page->data = NULL;
 }
 
 
-void pages_init(struct Pages *pages, char *title, P_TYPE id)
+void pages_init(struct Pages *pages, char *title, Action action)
 {
 	// Allocate for the title and copy over the title.
 	pages->title = malloc(sizeof(char) * strlen(title) + 1);
@@ -34,7 +34,7 @@ void pages_init(struct Pages *pages, char *title, P_TYPE id)
 	assert(pages->curr);
 	pages->root = pages->curr;
 
-	page_init(pages->curr, NULL, id);
+	page_init(pages->curr, NULL, action);
 }
 
 
@@ -76,7 +76,7 @@ void set_page_desc(struct Page *page, char *desc)
 }
 
 
-void add_page_option(struct Page *page, char *desc, P_TYPE id)
+struct Page *add_page_option(struct Page *page, char *desc, Action action)
 {
 	struct Page *new_page;
 
@@ -92,11 +92,13 @@ void add_page_option(struct Page *page, char *desc, P_TYPE id)
 
 	new_page = malloc(sizeof(struct Page));
 	assert(new_page);
-	page_init(new_page, desc, id);
+	page_init(new_page, desc, action);
 	new_page->prev = page;
 
 	page->options[page->len] = new_page;
 	page->len++;
+
+	return new_page;
 }
 
 
@@ -128,8 +130,11 @@ void print_page(struct Pages *pages, struct Page *page)
 }
 
 
-void switch_page(struct Pages *pages, uint32_t k_down)
+void switch_page(void *pages_ptr, void *k_down_ptr)
 {
+	struct Pages *pages = (struct Pages*)pages_ptr;
+	uint32_t k_down = *((uint32_t*)k_down_ptr);
+
 	if (k_down & BIT(1) && pages->curr->prev) {
 		pages->curr = pages->curr->prev;
 		return;

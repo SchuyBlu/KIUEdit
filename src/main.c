@@ -8,22 +8,43 @@
 
 int main(void)
 {
+	// -----------------------------------------------------
+	// Build each page
+	struct Pages pages;
+	struct Page *root, *businesses, *schools, *cities;
+
+	// Sets up Pages struct that contains the root node,
+	// and initializes the root page of the menu system.
+	pages_init(&pages, "Menu System", switch_page);
+	set_page_desc((root = pages.curr), "Choose an option:");
+
+	// Add a few options to the root page.
+	schools = add_page_option(root, "Universities", switch_page);
+	businesses = add_page_option(root, "Businesses", switch_page);
+	cities = add_page_option(root, "Cities", switch_page);
+
+	// Add a few options to the school page
+	add_page_option(schools, "University of Alberta", switch_page);
+	add_page_option(schools, "MacEwan University", switch_page);
+	add_page_option(schools, "NAIT", switch_page);
+	add_page_option(schools, "Norquest", switch_page);
+
+	// Add a few to the businesses page
+	add_page_option(businesses, "7-Eleven", switch_page);
+	add_page_option(businesses, "Tim Hortons", switch_page);
+	add_page_option(businesses, "Auto Repair", switch_page);
+	add_page_option(businesses, "Safeway", switch_page);
+
+	// Add a few to the cities page
+	add_page_option(cities, "Edmonton", switch_page);
+	add_page_option(cities, "Calgary", switch_page);
+	add_page_option(cities, "Grande Prairie", switch_page);
+	add_page_option(cities, "Vancouver", switch_page);
+	// -----------------------------------------------------
 	uint32_t k_down_old = 0;
 
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
-	struct Pages pages;
-
-	pages_init(&pages, "Kid Icarus Uprising Save Editor", MISC_PAGE);
-	set_page_desc(pages.curr, "Choose a save to edit:");
-
-	archive_open("KIU");
-
-	struct String_Array strings = directory_strings("KIU");
-	for (int i = 0; i < strings.len; i++) {
-		add_page_option(pages.curr, strings.list[i], MISC_PAGE);
-	}
-	strings_destroy(&strings);
 
 	// Enter main loop here
 	print_page(&pages, NULL);
@@ -36,9 +57,11 @@ int main(void)
 
 		if (k_down != k_down_old) {
 			consoleClear();
-			move_page_cursor(&pages, k_down);
 			print_page(&pages, NULL);
 		}
+
+		move_page_cursor(&pages, k_down);
+		pages.curr->action(&pages, &k_down);
 
 		k_down_old = k_down;
 
@@ -49,7 +72,6 @@ int main(void)
 
 	destroy_pages(&pages);
 
-	archive_close("KIU");
 	gfxExit();
 
 	return 0;

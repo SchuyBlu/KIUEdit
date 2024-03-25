@@ -7,7 +7,7 @@ struct Pages pages;
 
 void setUp(void)
 {
-        pages_init(&pages, "Testing Paginator", MISC_PAGE);
+        pages_init(&pages, "Testing Paginator", switch_page);
         set_page_desc(pages.curr, "This is a paginator!");
 }
 
@@ -31,21 +31,6 @@ void test_givenNewDescriptionAdded_should_correctlyChangeDescription(void)
 }
 
 
-void test_givenNewOptionAdded_should_correctlyAddNewOption(void)
-{
-        add_page_option(pages.curr, "New option.", MISC_PAGE);
-        TEST_ASSERT_EQUAL_INT(MISC_PAGE, pages.curr->options[pages.curr->len - 1]->id);
-        TEST_ASSERT_EQUAL_STRING("New option.", pages.curr->options[pages.curr->len - 1]->desc);
-        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->len);
-        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->cap);
-        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->len);
-        TEST_ASSERT_EQUAL_UINT32(1, pages.curr->options[pages.curr->len - 1]->cap);
-        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->selected);
-        TEST_ASSERT_EQUAL_UINT32(0, pages.curr->options[pages.curr->len - 1]->dealloc_idx);
-        TEST_ASSERT_EQUAL_UINT64(pages.curr, pages.curr->options[pages.curr->len - 1]->prev);
-}
-
-
 void test_givenAThirdLevelPage_should_beConstructedCorrectly(void)
 {
         // This test also exists to see whether or not memory for pages that
@@ -54,13 +39,12 @@ void test_givenAThirdLevelPage_should_beConstructedCorrectly(void)
         struct Page *page, *new_page;
 
         // We know this works because it's tested in the last test.
-        add_page_option(pages.curr, "New option.", MISC_PAGE);
+        add_page_option(pages.curr, "New option.", switch_page);
 
         page = pages.curr->options[pages.curr->len - 1];
-        add_page_option(page, "Third level page.", MISC_PAGE);
+        add_page_option(page, "Third level page.", switch_page);
 
         new_page = page->options[page->len - 1];
-        TEST_ASSERT_EQUAL_INT(MISC_PAGE, new_page->id);
         TEST_ASSERT_EQUAL_STRING("Third level page.", new_page->desc);
         TEST_ASSERT_EQUAL_UINT32(0, new_page->len);
         TEST_ASSERT_EQUAL_UINT32(1, new_page->cap);
@@ -71,7 +55,6 @@ void test_givenAThirdLevelPage_should_beConstructedCorrectly(void)
 
         // Now check whether the current page is accessible from the
         // current page.
-        TEST_ASSERT_EQUAL_INT(MISC_PAGE, page->options[page->len - 1]->id);
         TEST_ASSERT_EQUAL_STRING("Third level page.", page->options[page->len - 1]->desc);
         TEST_ASSERT_EQUAL_UINT32(0, page->options[page->len - 1]->len);
         TEST_ASSERT_EQUAL_UINT32(1, page->options[page->len - 1]->cap);
@@ -116,9 +99,9 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
         // pages.
         
         root = pages.curr;
-        add_page_option(root, "Root -> Option 1", MISC_PAGE);
-        add_page_option(root, "Root -> Option 2", MISC_PAGE);
-        add_page_option(root, "Root -> Option 3", MISC_PAGE);
+        add_page_option(root, "Root -> Option 1", switch_page);
+        add_page_option(root, "Root -> Option 2", switch_page);
+        add_page_option(root, "Root -> Option 3", switch_page);
 
         // Assign root options
         root_opt1 = root->options[0];
@@ -133,8 +116,8 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
         TEST_ASSERT_EQUAL_STRING("Root -> Option 3", root_opt3->desc);
 
         // Create outer branches for root_opt1 and test.
-        add_page_option(root_opt1, "Root -> Option 1 -> Option 1", MISC_PAGE);
-        add_page_option(root_opt1, "Root -> Option 1 -> Option 2", MISC_PAGE);
+        add_page_option(root_opt1, "Root -> Option 1 -> Option 1", switch_page);
+        add_page_option(root_opt1, "Root -> Option 1 -> Option 2", switch_page);
         root_opt1_opt1 = root_opt1->options[0];
         root_opt1_opt2 = root_opt1->options[1];
         TEST_ASSERT_EQUAL_UINT32(2, root_opt1->len);
@@ -142,8 +125,8 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
         TEST_ASSERT_EQUAL_STRING("Root -> Option 1 -> Option 2", root_opt1_opt2->desc);
 
         // Create outer branches for root_opt2 and test.
-        add_page_option(root_opt2, "Root -> Option 2 -> Option 1", MISC_PAGE);
-        add_page_option(root_opt2, "Root -> Option 2 -> Option 2", MISC_PAGE);
+        add_page_option(root_opt2, "Root -> Option 2 -> Option 1", switch_page);
+        add_page_option(root_opt2, "Root -> Option 2 -> Option 2", switch_page);
         root_opt2_opt1 = root_opt2->options[0];
         root_opt2_opt2 = root_opt2->options[1];
         TEST_ASSERT_EQUAL_UINT32(2, root_opt2->len);
@@ -151,8 +134,8 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
         TEST_ASSERT_EQUAL_STRING("Root -> Option 2 -> Option 2", root_opt2_opt2->desc);
 
         // Create outer branches for root_opt3 and test.
-        add_page_option(root_opt3, "Root -> Option 3 -> Option 1", MISC_PAGE);
-        add_page_option(root_opt3, "Root -> Option 3 -> Option 2", MISC_PAGE);
+        add_page_option(root_opt3, "Root -> Option 3 -> Option 1", switch_page);
+        add_page_option(root_opt3, "Root -> Option 3 -> Option 2", switch_page);
         root_opt3_opt1 = root_opt3->options[0];
         root_opt3_opt2 = root_opt3->options[1];
         TEST_ASSERT_EQUAL_UINT32(2, root_opt3->len);
@@ -163,57 +146,59 @@ void test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation(v
 
 void test_ifPrintIsCalled_should_displayCorrectly(void)
 {
-        add_page_option(pages.curr, "Option 1", MISC_PAGE);
-        add_page_option(pages.curr, "Option 2", MISC_PAGE);
-        add_page_option(pages.curr, "Option 3", MISC_PAGE);
-        add_page_option(pages.curr, "Option 4", MISC_PAGE);
+        add_page_option(pages.curr, "Option 1", switch_page);
+        add_page_option(pages.curr, "Option 2", switch_page);
+        add_page_option(pages.curr, "Option 3", switch_page);
+        add_page_option(pages.curr, "Option 4", switch_page);
         print_page(&pages, NULL);
 }
 
 
 void test_givenPageIsFlipped_then_newCurrentShouldBeUpdated(void)
 {
-        add_page_option(pages.curr, "Option 1", MISC_PAGE);
-        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+		uint32_t a = BIT(0), b = BIT(1);
+
+        add_page_option(pages.curr, "Option 1", switch_page);
+        add_page_option(pages.curr, "Option 2", switch_page);
 
         // First try to flip back. Nothing should happen and it should reamin
         // on the root page.
-        switch_page(&pages, BIT(1));
+        switch_page(&pages, &b);
         TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
 
         // Now test flipping forward.
-        switch_page(&pages, BIT(0));
+        switch_page(&pages, &a);
         TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
 
         // Now test flipping forward again. Nothing should happen and it should
         // remain on the Option 1 page.
-        switch_page(&pages, BIT(0));
+        switch_page(&pages, &a);
         TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
 
         // Now test flipping back again. This time it should work, and should
         // return to the root page.
-        switch_page(&pages, BIT(1));
+        switch_page(&pages, &b);
         TEST_ASSERT_EQUAL_STRING("This is a paginator!", pages.curr->desc);
 
         // Now change the selected index to 1. Should move it into the
         // Option 2 page.
         pages.curr->selected = 1;
-        switch_page(&pages, BIT(0));
+        switch_page(&pages, &a);
         TEST_ASSERT_EQUAL_STRING("Option 2", pages.curr->desc);
 
         // Now switch back again. This time make sure the root and curr pages are
         // equal.
-        switch_page(&pages, BIT(1));
+        switch_page(&pages, &b);
         TEST_ASSERT_EQUAL_UINT64(pages.curr, pages.root);
 }
 
 
 void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
 {
-        add_page_option(pages.curr, "Option 1", MISC_PAGE);
-        add_page_option(pages.curr, "Option 2", MISC_PAGE);
-        add_page_option(pages.curr, "Option 3", MISC_PAGE);
-        add_page_option(pages.curr, "Option 4", MISC_PAGE);
+        add_page_option(pages.curr, "Option 1", switch_page);
+        add_page_option(pages.curr, "Option 2", switch_page);
+        add_page_option(pages.curr, "Option 3", switch_page);
+        add_page_option(pages.curr, "Option 4", switch_page);
 
         TEST_ASSERT_EQUAL_UINT32(0, pages.curr->selected);
 
@@ -248,8 +233,10 @@ void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
 
 void test_ifCursorIsMovedAndPageIsFlipped_should_enterCorrectPage(void)
 {
-        add_page_option(pages.curr, "Option 1", MISC_PAGE);
-        add_page_option(pages.curr, "Option 2", MISC_PAGE);
+		uint32_t a = BIT(0), b = BIT(1);
+
+        add_page_option(pages.curr, "Option 1", switch_page);
+        add_page_option(pages.curr, "Option 2", switch_page);
 
         // We know we can enter the first option so it doesn't need testing.
         // Instead, let's test the following instructions:
@@ -264,21 +251,21 @@ void test_ifCursorIsMovedAndPageIsFlipped_should_enterCorrectPage(void)
         move_page_cursor(&pages, BIT(7));
 
         // 2.
-        switch_page(&pages, BIT(0));
+        switch_page(&pages, &a);
         TEST_ASSERT_EQUAL_STRING("Option 2", pages.curr->desc); 
 
         // 3.
-        switch_page(&pages, BIT(1));
+        switch_page(&pages, &b);
 
         // 4.
         move_page_cursor(&pages, BIT(7));
 
         // 5.
-        switch_page(&pages, BIT(0));
+        switch_page(&pages, &a);
         TEST_ASSERT_EQUAL_STRING("Option 1", pages.curr->desc);
 
         // 6.
-        switch_page(&pages, BIT(1));
+        switch_page(&pages, &b);
         TEST_ASSERT_EQUAL_UINT64(pages.root, pages.curr);
 }
 
@@ -288,7 +275,6 @@ int main(void)
         UNITY_BEGIN();
         RUN_TEST(test_givenPagesAreInitialized_should_displayCorrectTitle);
         RUN_TEST(test_givenNewDescriptionAdded_should_correctlyChangeDescription);
-        RUN_TEST(test_givenNewOptionAdded_should_correctlyAddNewOption);
         RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
         RUN_TEST(test_givenThreePagesWithTwoLevelsEach_should_correctContainAllInformation);
         RUN_TEST(test_givenPageIsFlipped_then_newCurrentShouldBeUpdated);
