@@ -3,43 +3,43 @@
 #include <string.h>
 #include <unistd.h>
 #include <3ds.h>
-#include "pages.h"
+#include "menu.h"
 #include "archive.h"
 
 int main(void)
 {
 	// -----------------------------------------------------
-	// Build each page
-	struct Pages pages;
-	struct Page *root, *businesses, *schools, *cities;
+	// Build each submenu
+	Menu menu;
+	Submenu *root, *businesses, *schools, *cities;
 
-	// Sets up Pages struct that contains the root node,
-	// and initializes the root page of the menu system.
-	pages_init(&pages, "Menu System", switch_page);
-	set_page_desc((root = pages.curr), "Choose an option:");
+	// Sets up Menu struct that contains the root node,
+	// and initializes the root submenu of the menu system.
+	menu_init(&menu, "Menu System", switch_submenu);
+	set_submenu_desc((root = menu.curr), "Choose an option:");
 
 	// Add a few options to the root page.
-	schools = add_page_option(root, "Universities", switch_page);
-	businesses = add_page_option(root, "Businesses", switch_page);
-	cities = add_page_option(root, "Cities", switch_page);
+	schools = add_submenu_option(root, "Universities", switch_submenu);
+	businesses = add_submenu_option(root, "Businesses", switch_submenu);
+	cities = add_submenu_option(root, "Cities", switch_submenu);
 
 	// Add a few options to the school page
-	add_page_option(schools, "University of Alberta", switch_page);
-	add_page_option(schools, "MacEwan University", switch_page);
-	add_page_option(schools, "NAIT", switch_page);
-	add_page_option(schools, "Norquest", switch_page);
+	add_submenu_option(schools, "University of Alberta", switch_submenu);
+	add_submenu_option(schools, "MacEwan University", switch_submenu);
+	add_submenu_option(schools, "NAIT", switch_submenu);
+	add_submenu_option(schools, "Norquest", switch_submenu);
 
 	// Add a few to the businesses page
-	add_page_option(businesses, "7-Eleven", switch_page);
-	add_page_option(businesses, "Tim Hortons", switch_page);
-	add_page_option(businesses, "Auto Repair", switch_page);
-	add_page_option(businesses, "Safeway", switch_page);
+	add_submenu_option(businesses, "7-Eleven", switch_submenu);
+	add_submenu_option(businesses, "Tim Hortons", switch_submenu);
+	add_submenu_option(businesses, "Auto Repair", switch_submenu);
+	add_submenu_option(businesses, "Safeway", switch_submenu);
 
 	// Add a few to the cities page
-	add_page_option(cities, "Edmonton", switch_page);
-	add_page_option(cities, "Calgary", switch_page);
-	add_page_option(cities, "Grande Prairie", switch_page);
-	add_page_option(cities, "Vancouver", switch_page);
+	add_submenu_option(cities, "Edmonton", switch_submenu);
+	add_submenu_option(cities, "Calgary", switch_submenu);
+	add_submenu_option(cities, "Grande Prairie", switch_submenu);
+	add_submenu_option(cities, "Vancouver", switch_submenu);
 	// -----------------------------------------------------
 	uint32_t k_down_old = 0;
 
@@ -47,7 +47,7 @@ int main(void)
 	consoleInit(GFX_TOP, NULL);
 
 	// Enter main loop here
-	print_page(&pages, NULL);
+	print_menu(&menu, NULL);
 	while (aptMainLoop()) {
 		hidScanInput();
 
@@ -57,11 +57,11 @@ int main(void)
 
 		if (k_down != k_down_old) {
 			consoleClear();
-			print_page(&pages, NULL);
+			print_menu(&menu, NULL);
 		}
 
-		move_page_cursor(&pages, k_down);
-		pages.curr->action(&pages, &k_down);
+		move_menu_cursor(&menu, k_down);
+		menu.curr->action(&menu, &k_down);
 
 		k_down_old = k_down;
 
@@ -70,7 +70,7 @@ int main(void)
 		gspWaitForVBlank();
 	}
 
-	destroy_pages(&pages);
+	destroy_menu(&menu);
 
 	gfxExit();
 
