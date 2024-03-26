@@ -1,6 +1,6 @@
 /*
  * Author: Schuy
- * Meant to be used as a pagination API, and has been written to be as
+ * Meant to be used as a menu API, and has been written to be as
  * standalone as possible.
  */
 #include <stdio.h>

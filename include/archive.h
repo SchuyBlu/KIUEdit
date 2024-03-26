@@ -1,3 +1,7 @@
+/*
+ * Author: Schuy
+ * Meant to handle opening and closing of 3DS archives.
+ */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,7 +9,7 @@
 #include <dirent.h>
 #include <assert.h>
 #include <3ds.h>
-#include "arrays.h"
+#include "types.h"
 
 
 /*
@@ -33,5 +37,5 @@ void archive_close(const char *name);
  * Gets a list of strings representing the directory listings.
  * `name` - Name of archive the directory is within.
  */
-struct String_Array directory_strings(const char *name);
+String2D directory_strings(char const *name);
 
