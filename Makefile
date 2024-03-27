@@ -12,6 +12,7 @@ PATHR=build/test/results/
 BUILD_PATHS=$(PATHB) $(PATHO) $(PATHR)
 
 TSRC=$(wildcard $(PATHT)*.c)
+PSRC=$(wildcard $(PATHS)*.c)
 
 # Needed to create results files
 RESULTS=$(patsubst $(PATHT)Test_%.c,$(PATHR)Test_%.txt,$(TSRC))
@@ -49,6 +50,11 @@ test: $(BUILD_PATHS) $(RESULTS)
 $(PATHR)%.txt: $(PATHB)%.out
 	-./$< > $@ 2>&1
 
+# Define Test output rules for executables that have more than
+# one dependency
+$(PATHB)Test_file.out: $(PATHO)Test_file.o $(PATHO)file.o $(PATHO)weapons.o $(PATHO)unity.o
+	$(LINK) $(SANITIZE) -o $@ $^
+
 $(PATHB)Test_%.out: $(PATHO)Test_%.o $(PATHO)%.o $(PATHO)unity.o
 	$(LINK) $(SANITIZE) -o $@ $^
 
@@ -58,11 +64,11 @@ $(PATHO)%.o:: $(PATHT)%.c
 
 # Build src object files
 $(PATHO)%.o:: $(PATHS)%.c
-	$(COMPILE) $(SANITIZE) $(CFLAGS) $(DEFINES) $(LIBLINK) $< -o $@
+	$(COMPILE) $(SANITIZE) $(CFLAGS) $(DEFINES) $< -o $@
 
 # Build unity object files
 $(PATHO)%.o:: $(PATHU)%.c
-	$(COMPILE) $(SANITIZE) $(CFLAGS) $< -o $@
+	$(COMPILE) $(SANITIZE) $(CFLAGS) $(DEPFLAGS) $< -o $@
 
 # Make the necessary directories to run test if they don't exist
 $(PATHB):
@@ -79,4 +85,3 @@ clean:
 	rm -f $(PATHO)*.o
 	rm -f $(PATHB)*.out
 	rm -f $(PATHR)*.txt
-

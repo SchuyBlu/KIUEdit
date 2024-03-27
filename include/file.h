@@ -12,11 +12,12 @@
 #endif
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 #include <stdint.h>
 #include "offsets.h"
-#include <json-c/json.h>
+#include "weapons.h"
 
 
 /*
@@ -27,12 +28,12 @@
  * `donate_p` - palutena heart donations.
  * `donate_v` - viridi heart donations.
  */
-struct SaveFile {
+typedef struct SaveFile {
 	FILE *fp;
 	uint32_t hearts;
 	uint32_t donate_p;
 	uint32_t donate_v;
-};
+} SaveFile;
 
 
 /*
@@ -40,14 +41,14 @@ struct SaveFile {
  * `save` - pointer to save file struct to be initialized.
  * `path` - string representing path to save file.
  */
-void savefile_init(struct SaveFile *save, char *path);
+void savefile_init(SaveFile *save, char *path);
 
 
 /*
  * Destroys all remaining save file struct data.
  * `save` - pointer to save file struct to be destroyed.
  */
-void destroy_savefile(struct SaveFile *save);
+void destroy_savefile(SaveFile *save);
 
 
 /*
@@ -55,7 +56,7 @@ void destroy_savefile(struct SaveFile *save);
  * `save` - save file struct.
  * `offset` - offset to start reading from in save file.
  */
-uint32_t _retrieve_hearts(struct SaveFile *save, D_OFFSET offset);
+uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset);
 
 
 /*
@@ -63,5 +64,12 @@ uint32_t _retrieve_hearts(struct SaveFile *save, D_OFFSET offset);
  * function.
  * `save` - save file struct to be saved into.
  */
-void fetch_savefile_hearts(struct SaveFile *save);
+void fetch_savefile_hearts(SaveFile *save);
+
+
+/*
+ * Retrieves weapons from the file and stores them into a 64 bit boundary.
+ * `save` - save file struct to be saved into.
+ */
+void fetch_savefile_weapons(SaveFile *save);
 
