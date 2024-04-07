@@ -124,9 +124,9 @@ elif [ "$1" = "clean" ]; then
 elif [ "$1" = "release" ]; then
 	docker exec -w /home/workspace/ test bash -c "make 3ds"
 elif [ "${REBUILD}" -eq 0 ]; then
-	echo "Error: Not a valid argument. Please see ./build.sh -h"
+	echo "Error: Not a valid argument. Please see ./run.sh -h"
 fi
 
-docker stop test > /dev/null
+docker kill test > /dev/null
 yes "y" | docker container prune > /dev/null
 
