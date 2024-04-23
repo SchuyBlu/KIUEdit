@@ -121,7 +121,7 @@ if [ "$1" = "test" ]; then
 	docker exec -w /home/workspace/ test bash -c 'make test'
 elif [ "$1" = "clean" ]; then
 	docker exec -w /home/workspace/ test bash -c "make clean"
-elif [ "$1" = "release" ]; then
+elif [ "$1" = "3dsx" ]; then
 	docker exec -w /home/workspace/ test bash -c "make 3ds"
 elif [ "${REBUILD}" -eq 0 ]; then
 	echo "Error: Not a valid argument. Please see ./run.sh -h"
