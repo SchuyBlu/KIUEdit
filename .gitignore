@@ -7,6 +7,10 @@ build
 # Vim related files
 *.json
 
+# VSCode stuff
+.vscode
+.github/*
+
 # Ignore testing module
 unity
 

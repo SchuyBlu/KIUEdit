@@ -40,7 +40,7 @@ void test_ifSaveIsInitializedProperly_should_haveAllProperHeartData(void)
 
 void test_shouldReadWeaponNameCorrectly(void)
 {
-	fetch_savefile_weapons(&save);
+	fetch_savefile_weapon(&save);
 }
 
 

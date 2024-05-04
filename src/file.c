@@ -40,7 +40,7 @@ void fetch_savefile_hearts(SaveFile *save)
 }
 
 
-void fetch_savefile_weapons(SaveFile *save)
+void fetch_savefile_weapon(SaveFile *save)
 {
 	uint64_t region = 0;
 	Weapon *weapon = NULL;
@@ -52,7 +52,11 @@ void fetch_savefile_weapons(SaveFile *save)
 	// Read 8 bytes from this point, which can hold weapon type and stars.
 	fread(&region, 8, 1, save->fp);
 
-	printf("%lx\n", region);
+	// Fetch data related to class and weapon ids.
+	uint8_t wid = (region >> 7) & 0x0f;
+	uint8_t cid = (region >> 2) & 0x0f;
+
+	printf("%ld, %ld\n", wid, cid);
 
 	destroy_weapon(weapon);
 }

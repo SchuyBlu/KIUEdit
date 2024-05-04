@@ -71,5 +71,5 @@ void fetch_savefile_hearts(SaveFile *save);
  * Retrieves weapons from the file and stores them into a 64 bit boundary.
  * `save` - save file struct to be saved into.
  */
-void fetch_savefile_weapons(SaveFile *save);
+void fetch_savefile_weapon(SaveFile *save);
 
