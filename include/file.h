@@ -18,6 +18,7 @@
 #include <stdint.h>
 #include "offsets.h"
 #include "weapons.h"
+#include "const.h"
 
 
 /*

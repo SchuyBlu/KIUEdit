@@ -1,3 +1,4 @@
+#define IS_TEST
 #include "file.h"
 #include "unity.h"
 
