@@ -52,7 +52,7 @@ $(PATHR)%.txt: $(PATHB)%.out
 
 # Define Test output rules for executables that have more than
 # one dependency
-$(PATHB)Test_file.out: $(PATHO)Test_file.o $(PATHO)file.o $(PATHO)weapons.o $(PATHO)unity.o
+$(PATHB)Test_file.out: $(PATHO)Test_file.o $(PATHO)const.o $(PATHO)file.o $(PATHO)weapons.o $(PATHO)unity.o
 	$(LINK) $(SANITIZE) -o $@ $^
 
 $(PATHB)Test_%.out: $(PATHO)Test_%.o $(PATHO)%.o $(PATHO)unity.o
