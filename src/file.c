@@ -66,6 +66,16 @@ const char **const map_to_class(uint8_t cid)
 	}
 }
 
+const char *const map_to_weapon(uint8_t cid, uint8_t wid)
+{
+	const char **const weapons = map_to_class(cid);
+
+	if (weapons == NULL || wid > 11)
+		return NULL;
+
+	return weapons[wid];
+}
+
 
 void fetch_savefile_weapon(SaveFile *save)
 {

@@ -12,7 +12,8 @@ const char *BLADE_STRINGS[] = {
 	"Bullet Blade",
 	"Aquarius Blade",
 	"Aurum Blade",
-	"Palutena Blade"
+	"Palutena Blade",
+	"Gaol Blade"
 };
 
 

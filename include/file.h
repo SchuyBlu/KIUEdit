@@ -77,6 +77,15 @@ const char **const map_to_class(uint8_t cid);
 
 
 /*
+ * Returns a constant string representation of whatever weapon is determined
+ * by cid and wid.
+ * `cid` - class id.
+ * `wid` - weapon id.
+ */
+const char *const map_to_weapon(uint8_t cid, uint8_t wid);
+
+
+/*
  * Retrieves weapons from the file and stores them into a 64 bit boundary.
  * `save` - save file struct to be saved into.
  */
