@@ -65,7 +65,15 @@ uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset);
  * function.
  * `save` - save file struct to be saved into.
  */
-void fetch_savefile_hearts(SaveFile *save);
+ void fetch_savefile_hearts(SaveFile *save);
+
+
+/*
+ * Returns an array of strings of weapons within a certain class by mapping
+ * class id to said array.
+ * `cid` - class id.
+ */
+const char **const map_to_class(uint8_t cid);
 
 
 /*

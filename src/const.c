@@ -1,7 +1,7 @@
 #include "const.h"
 
 
-const char *const BLADE_STRINGS[] = {
+const char *BLADE_STRINGS[] = {
 	"First Blade",
 	"Burst Blade",
 	"Viper Blade",
@@ -16,7 +16,7 @@ const char *const BLADE_STRINGS[] = {
 };
 
 
-const char *const STAFF_STRINGS[] = {
+const char *STAFF_STRINGS[] = {
 	"Insight Staff",
 	"Orb Staff",
 	"Rose Staff",
@@ -32,7 +32,7 @@ const char *const STAFF_STRINGS[] = {
 };
 
 
-const char *const CLAW_STRINGS[] = {
+const char *CLAW_STRINGS[] = {
 	"Tiger Claws",
 	"Wolf Claws",
 	"Bear Claws",
@@ -48,7 +48,7 @@ const char *const CLAW_STRINGS[] = {
 };
 
 
-const char *const BOW_STRINGS[] = {
+const char *BOW_STRINGS[] = {
 	"Fortune Bow",
 	"Silver Bow",
 	"Meteor Bow",
@@ -64,7 +64,7 @@ const char *const BOW_STRINGS[] = {
 };
 
 
-const char *const PALM_STRINGS[] = {
+const char *PALM_STRINGS[] = {
 	"Violet Palm",
 	"Burning Palm",
 	"Needle Palm",
@@ -80,7 +80,7 @@ const char *const PALM_STRINGS[] = {
 };
 
 
-const char *const CLUB_STRINGS[] = {
+const char *CLUB_STRINGS[] = {
 	"Ore Club",
 	"Babel Club",
 	"Skyscraper Club",
@@ -96,7 +96,7 @@ const char *const CLUB_STRINGS[] = {
 };
 
 
-const char *const CANNON_STRINGS[] = {
+const char *CANNON_STRINGS[] = {
 	"EZ Cannon",
 	"Ball Cannon",
 	"Predator Cannon",
@@ -112,7 +112,7 @@ const char *const CANNON_STRINGS[] = {
 };
 
 
-const char *const ORBITAR_STRINGS[] = {
+const char *ORBITAR_STRINGS[] = {
 	"Standard Orbitars",
 	"Guardian Orbitars",
 	"Shock Orbitars",
@@ -128,7 +128,7 @@ const char *const ORBITAR_STRINGS[] = {
 };
 
 
-const char *const ARM_STRINGS[] = {
+const char *ARM_STRINGS[] = {
 	"Crusher Arm",
 	"Compact Arm",
 	"Electroshock Arm",
@@ -145,7 +145,7 @@ const char *const ARM_STRINGS[] = {
 
 
 // Hex value + 1 of each modifier corresponds to index of modifier.
-const char *const MOD_STRINGS[] = {
+const char *MOD_STRINGS[] = {
 	"Standing ch. shot +1",
 	"Standing ch. shot +2",
 	"Standing ch. shot +3",

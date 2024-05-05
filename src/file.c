@@ -40,8 +40,36 @@ void fetch_savefile_hearts(SaveFile *save)
 }
 
 
+const char **const map_to_class(uint8_t cid)
+{
+	switch (cid) {
+		case 0:
+			return BLADE_STRINGS;
+		case 1:
+			return STAFF_STRINGS;
+		case 2:
+			return CLAW_STRINGS;
+		case 3:
+			return BOW_STRINGS;
+		case 4:
+			return PALM_STRINGS;
+		case 5:
+			return CLUB_STRINGS;
+		case 6:
+			return CANNON_STRINGS;
+		case 7:
+			return ORBITAR_STRINGS;
+		case 8:
+			return ARM_STRINGS;
+		default:
+			return NULL;
+	}
+}
+
+
 void fetch_savefile_weapon(SaveFile *save)
 {
+	uint8_t wid = 0, cid = 0;
 	uint64_t region = 0;
 	Weapon *weapon = NULL;
 
@@ -53,8 +81,8 @@ void fetch_savefile_weapon(SaveFile *save)
 	fread(&region, 8, 1, save->fp);
 
 	// Fetch data related to class and weapon ids.
-	uint8_t wid = (region >> 7) & 0x0f;
-	uint8_t cid = (region >> 2) & 0x0f;
+	wid = (region >> 7) & 0x0f;
+	cid = (region >> 2) & 0x0f;
 
 	printf("%ld, %ld\n", wid, cid);
 

@@ -40,7 +40,8 @@ void test_ifSaveIsInitializedProperly_should_haveAllProperHeartData(void)
 	TEST_ASSERT_EQUAL_UINT32(0, save.donate_v);
 }
 
-void test_assertModStringLenMatchesModValueLen(void)
+
+void test_assertModStringLen_should_MatcheModValueLen(void)
 {
 	// mod_strings_len and mod_values_len defined in const.c, length had to
 	// be determined within file arrays were defined in.
@@ -49,6 +50,22 @@ void test_assertModStringLenMatchesModValueLen(void)
 
 	TEST_ASSERT_EQUAL_size_t(mod_strings_len, mod_values_len);
 }
+
+
+void test_ifCidPassed_should_returnCorrectArray(void)
+{
+	TEST_ASSERT_EQUAL_STRING("First Blade", map_to_class(0)[0]);
+	TEST_ASSERT_EQUAL_STRING("Insight Staff", map_to_class(1)[0]);
+	TEST_ASSERT_EQUAL_STRING("Tiger Claws", map_to_class(2)[0]);
+	TEST_ASSERT_EQUAL_STRING("Fortune Bow", map_to_class(3)[0]);
+	TEST_ASSERT_EQUAL_STRING("Violet Palm", map_to_class(4)[0]);
+	TEST_ASSERT_EQUAL_STRING("Ore Club", map_to_class(5)[0]);
+	TEST_ASSERT_EQUAL_STRING("EZ Cannon", map_to_class(6)[0]);
+	TEST_ASSERT_EQUAL_STRING("Standard Orbitars", map_to_class(7)[0]);
+	TEST_ASSERT_EQUAL_STRING("Crusher Arm", map_to_class(8)[0]);
+	TEST_ASSERT_NULL(map_to_class(9));
+}
+
 
 void test_shouldReadWeaponNameCorrectly(void)
 {
@@ -63,7 +80,8 @@ int main(void)
 	RUN_TEST(test_ifHeartsAreRead_should_returnProperHeartCount);
 	RUN_TEST(test_ifSaveIsInitializedProperly_should_haveAllProperHeartData);
 	RUN_TEST(test_shouldReadWeaponNameCorrectly);
-	RUN_TEST(test_assertModStringLenMatchesModValueLen);
+	RUN_TEST(test_assertModStringLen_should_MatcheModValueLen);
+	RUN_TEST(test_ifCidPassed_should_returnCorrectArray);
 	UNITY_END();
 }
 
