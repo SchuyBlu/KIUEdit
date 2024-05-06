@@ -66,6 +66,7 @@ const char **const map_to_class(uint8_t cid)
 	}
 }
 
+
 const char *const map_to_weapon(uint8_t cid, uint8_t wid)
 {
 	const char **const weapons = map_to_class(cid);
@@ -77,24 +78,27 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid)
 }
 
 
-void fetch_savefile_weapon(SaveFile *save)
+void fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 {
 	uint8_t wid = 0, cid = 0;
-	uint64_t region = 0;
+	uint32_t region = 0;
 	Weapon *weapon = NULL;
 
 	weapon = weapon_init(weapon);
 
-	fseek(save->fp, WEAPON_OFFSET + 0x5, SEEK_SET);
+	fseek(save->fp, offset + 0x5, SEEK_SET);
 	
-	// Read 8 bytes from this point, which can hold weapon type and stars.
-	fread(&region, 8, 1, save->fp);
+	// Read 2 bytes from this point, which can hold weapon type and stars.
+	fread(&region, 2, 1, save->fp);
 
 	// Fetch data related to class and weapon ids.
 	wid = (region >> 7) & 0x0f;
 	cid = (region >> 2) & 0x0f;
 
-	printf("%ld, %ld\n", wid, cid);
+	// Populate data into weapon.
+	weapon->metadata = region & 0xf843; // mask for data not including cid and wid.
+	weapon->ids = (cid << 4) | wid;
+	weapon->name = map_to_weapon(cid, wid);
 
 	destroy_weapon(weapon);
 }

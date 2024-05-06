@@ -8,7 +8,9 @@ Weapon *weapon_init(Weapon *weapon)
 		assert(weapon);
 	}
 
-	weapon->bin_type = 0;
+	weapon->name = NULL;
+	weapon->metadata = 0;
+	weapon->ids = 0;
 	weapon->ranged = 0;
 	weapon->melee = 0;
 	weapon->bin_mod1 = 0;
@@ -18,7 +20,6 @@ Weapon *weapon_init(Weapon *weapon)
 	weapon->bin_mod5 = 0;
 	weapon->bin_mod6 = 0;
 
-	weapon->name = NULL;
 	weapon->mod1 = NULL;
 	weapon->mod2 = NULL;
 	weapon->mod3 = NULL;
@@ -32,10 +33,7 @@ Weapon *weapon_init(Weapon *weapon)
 
 void destroy_weapon(Weapon *weapon)
 {
-	// If one internal element has been allocated for, safely assume they all
-	// have been.
-	if (weapon->name != NULL) {
-		free(weapon->name);
+	if (weapon->mod1 != NULL) {
 		free(weapon->mod1);
 		free(weapon->mod2);
 		free(weapon->mod3);

@@ -12,7 +12,7 @@
 /*
  * Struct to store both binary data for a Weapon and strings to make it
  * human readable.
- * `bin_type` - two bytes containing class id and weapon id.
+ * `metadata` - two bytes pertaining to time obtained.
  * `ranged` - contains how many ranged stars * 2.
  * `melee` - contains how many melee stars * 2.
  * `bin_mod1` - binary representation of first mod slot.
@@ -31,7 +31,8 @@
  */
 typedef struct Weapon {
 	// Regions to hold necessary binary data.
-	uint16_t bin_type;
+	uint8_t metadata;
+	uint8_t ids;
 	uint8_t bin_mod1;
 	uint8_t bin_mod2;
 	uint8_t bin_mod3;
@@ -40,7 +41,7 @@ typedef struct Weapon {
 	uint8_t bin_mod6;
 
 	// Region to hold human readaable data.
-	char *name;
+	const char *name; // Stack allocated, do not free
 	uint8_t ranged;
 	uint8_t melee;
 	char *mod1;

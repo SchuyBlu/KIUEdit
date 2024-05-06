@@ -203,7 +203,7 @@ void test_ifCidAndWipValid_should_returnCorrectString(void)
 
 void test_shouldReadWeaponNameCorrectly(void)
 {
-	fetch_savefile_weapon(&save);
+	fetch_savefile_weapon(&save, 0x670);
 }
 
 

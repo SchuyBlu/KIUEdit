@@ -72,6 +72,8 @@ uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset);
  * Returns an array of strings of weapons within a certain class by mapping
  * class id to said array.
  * `cid` - class id.
+ * Returns:
+ * `const char **const` - Array of weapon names within class.
  */
 const char **const map_to_class(uint8_t cid);
 
@@ -81,13 +83,22 @@ const char **const map_to_class(uint8_t cid);
  * by cid and wid.
  * `cid` - class id.
  * `wid` - weapon id.
+ * Returns:
+ * `const char *const` - immutable string containing name of weapon.
  */
 const char *const map_to_weapon(uint8_t cid, uint8_t wid);
 
 
 /*
+ * Internal function for populating name data for weapon.
+ * `region` - data pertaining to the name.
+ */
+static void populate_name_data(uint32_t data);
+
+/*
  * Retrieves weapons from the file and stores them into a 64 bit boundary.
  * `save` - save file struct to be saved into.
+ * `offset` - offset of weapon being read.
  */
-void fetch_savefile_weapon(SaveFile *save);
+void fetch_savefile_weapon(SaveFile *save, uint32_t offset);
 
