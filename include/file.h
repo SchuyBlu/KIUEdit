@@ -91,14 +91,26 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid);
 
 /*
  * Internal function for populating name data for weapon.
- * `region` - data pertaining to the name.
+ * `weapon` - weapon whose data is being populated.
+ * `data` - data pertaining to the name.
  */
-static void populate_name_data(uint32_t data);
+static void populate_name_data(Weapon *weapon, uint32_t data);
+
 
 /*
- * Retrieves weapons from the file and stores them into a 64 bit boundary.
+ * Interal function for populating star data for weapon.
+ * `weapon` - weapon whose data is being populated.
+ * `data` - data pertaining to stars.
+ */
+static void populate_star_data(Weapon *weapon, uint32_t data);
+
+
+/*
+ * Retrieves weapon from the file and returns it..
  * `save` - save file struct to be saved into.
  * `offset` - offset of weapon being read.
+ * Returns:
+ * `Weapon*` - pointer to weapon struct.
  */
-void fetch_savefile_weapon(SaveFile *save, uint32_t offset);
+Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset);
 

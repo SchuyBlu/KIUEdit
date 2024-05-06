@@ -78,9 +78,41 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid)
 }
 
 
-void fetch_savefile_weapon(SaveFile *save, uint32_t offset)
+static void populate_name_data(Weapon *weapon, uint32_t data) 
 {
 	uint8_t wid = 0, cid = 0;
+
+	// Fetch data related to class and weapon ids.
+	wid = (data >> 7) & 0x0f;
+	cid = (data >> 2) & 0x0f;
+
+	// Populate data related to name, ids, and timestamp metadata into weapon.
+	weapon->metadata = data & 0xf843; // mask for data not including cid and wid.
+	weapon->ids = (cid << 4) | wid;
+	weapon->name = map_to_weapon(cid, wid);
+}
+
+static void populate_star_data(Weapon *weapon, uint32_t data)
+{
+	uint8_t star_data1 = 0, star_data2 = 0;
+
+	star_data1 = data >> 8;
+	star_data2 = data >> 24;
+
+	// determines if first star is melee star.
+	// If so, store as melee.
+	if (star_data1 & 0x10) {
+		weapon->melee = star_data1 & 0x0f;
+		weapon->ranged = 0;
+	} else {
+		weapon->ranged = star_data1 & 0x0f;
+		weapon->melee = star_data2 & 0x0f;
+	}
+}
+
+
+Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
+{
 	uint32_t region = 0;
 	Weapon *weapon = NULL;
 
@@ -88,18 +120,15 @@ void fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 
 	fseek(save->fp, offset + 0x5, SEEK_SET);
 	
-	// Read 2 bytes from this point, which can hold weapon type and stars.
+	// Read 2 bytes from this point, which can hold weapon type.
 	fread(&region, 2, 1, save->fp);
+	populate_name_data(weapon, region);
 
-	// Fetch data related to class and weapon ids.
-	wid = (region >> 7) & 0x0f;
-	cid = (region >> 2) & 0x0f;
+	// We are now interested in star data, read star data.
+	region = 0;
+	fread(&region, 4, 1, save->fp);
+	populate_star_data(weapon, region);
 
-	// Populate data into weapon.
-	weapon->metadata = region & 0xf843; // mask for data not including cid and wid.
-	weapon->ids = (cid << 4) | wid;
-	weapon->name = map_to_weapon(cid, wid);
-
-	destroy_weapon(weapon);
+	return weapon;
 }
 

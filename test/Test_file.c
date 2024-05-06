@@ -201,9 +201,72 @@ void test_ifCidAndWipValid_should_returnCorrectString(void)
 }
 
 
-void test_shouldReadWeaponNameCorrectly(void)
+void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 {
-	fetch_savefile_weapon(&save, 0x670);
+	SaveFile tsave;
+	Weapon *first_blade = NULL;
+
+	tsave.fp = fopen("test/input/first_blade_6r.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening first blade file.\n");
+		return;
+	}
+
+	// Now run tests here. Name and stars should be populated after this call.
+	first_blade = fetch_savefile_weapon(&tsave, 0x0);
+
+	TEST_ASSERT_EQUAL_STRING("First Blade", first_blade->name);
+	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)first_blade->ranged / 2);
+	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)first_blade->melee / 2);
+
+	fclose(tsave.fp);
+	destroy_weapon(first_blade);
+}
+
+
+void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
+{
+	SaveFile tsave;
+	Weapon *gaol_blade = NULL;
+
+	tsave.fp = fopen("test/input/gaol_blade_6r6m.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening gaol blade file.\n");
+		return;
+	}
+
+	// Now run tests here. Name and stars should be populated after this call.
+	gaol_blade = fetch_savefile_weapon(&tsave, 0x0);
+
+	TEST_ASSERT_EQUAL_STRING("Gaol Blade", gaol_blade->name);
+	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->ranged / 2);
+	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->melee / 2);
+
+	fclose(tsave.fp);
+	destroy_weapon(gaol_blade);
+}
+
+
+void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
+{
+	SaveFile tsave;
+	Weapon *drill_arm = NULL;
+
+	tsave.fp = fopen("test/input/drill_arm_6m.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening drill arm file.\n");
+		return;
+	}
+
+	// Now run tests here. Name and stars should be populated after this call.
+	drill_arm = fetch_savefile_weapon(&tsave, 0x0);
+
+	TEST_ASSERT_EQUAL_STRING("Drill Arm", drill_arm->name);
+	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)drill_arm->ranged / 2);
+	TEST_ASSERT_EQUAL_FLOAT(4.5, (float)drill_arm->melee / 2);
+
+	fclose(tsave.fp);
+	destroy_weapon(drill_arm);
 }
 
 
@@ -213,10 +276,12 @@ int main(void)
 	RUN_TEST(test_ifSaveIsInitializedProperlyThenFile_should_beTruthy);
 	RUN_TEST(test_ifHeartsAreRead_should_returnProperHeartCount);
 	RUN_TEST(test_ifSaveIsInitializedProperly_should_haveAllProperHeartData);
-	RUN_TEST(test_shouldReadWeaponNameCorrectly);
 	RUN_TEST(test_assertModStringLen_should_MatcheModValueLen);
 	RUN_TEST(test_ifCidPassed_should_returnCorrectArray);
 	RUN_TEST(test_ifCidAndWipValid_should_returnCorrectString);
+	RUN_TEST(test_givenFirstBladeAndSixStars_should_containCorrectInfo);
+	RUN_TEST(test_givenGaolBladeAndBothSixStars_should_containCorrectInfo);
+	RUN_TEST(test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo);
 	UNITY_END();
 }
 
