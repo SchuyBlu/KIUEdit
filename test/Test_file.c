@@ -270,6 +270,25 @@ void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 }
 
 
+void test_givenMetaDataAndStars_should_combineToCorrectBytes(void)
+{
+	uint8_t cid = 0, wid = 0;
+	uint16_t correct_bytes = 0x219c, result_bytes = 0;
+
+	Weapon *weapon = fetch_savefile_weapon(&save, 0x670);
+
+	cid = (weapon->ids & 0xf0) >> 4;
+	wid = weapon->ids & 0x0f;
+
+	result_bytes |= (uint16_t)cid << 2;
+	result_bytes |= (uint16_t)wid << 7;
+	result_bytes |= weapon->metadata;
+	destroy_weapon(weapon);
+
+	TEST_ASSERT_EQUAL_UINT16(correct_bytes, result_bytes);
+}
+
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -282,6 +301,7 @@ int main(void)
 	RUN_TEST(test_givenFirstBladeAndSixStars_should_containCorrectInfo);
 	RUN_TEST(test_givenGaolBladeAndBothSixStars_should_containCorrectInfo);
 	RUN_TEST(test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo);
+	RUN_TEST(test_givenMetaDataAndStars_should_combineToCorrectBytes);
 	UNITY_END();
 }
 

@@ -31,7 +31,7 @@
  */
 typedef struct Weapon {
 	// Regions to hold necessary binary data.
-	uint8_t metadata;
+	uint16_t metadata;
 	uint8_t ids;
 	uint8_t bin_mod1;
 	uint8_t bin_mod2;

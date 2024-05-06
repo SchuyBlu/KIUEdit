@@ -92,6 +92,7 @@ static void populate_name_data(Weapon *weapon, uint32_t data)
 	weapon->name = map_to_weapon(cid, wid);
 }
 
+
 static void populate_star_data(Weapon *weapon, uint32_t data)
 {
 	uint8_t star_data1 = 0, star_data2 = 0;
