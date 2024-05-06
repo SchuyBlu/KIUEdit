@@ -31,8 +31,9 @@ The output to the terminal will only show failed tests and any output from the a
 
 ## Todo
 The following features currently are incomplete:
+- Refactor out `assert` calls to properly handle errors (**high priority**).
 - Translate byte values to associated strings.
-- Read weapon data in save.
+- Read weapon data in save (50%).
 - Test arrays.h, archive.h.
 - Add ability to modify data on 3DS.
 - `make release`
