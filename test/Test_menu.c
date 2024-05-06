@@ -272,13 +272,13 @@ void test_ifCursorIsMovedAndSubmenuIsChanged_should_enterCorrectSubmenu(void)
 
 int main(void)
 {
-        UNITY_BEGIN();
-		RUN_TEST(test_givenMenuIsInitialized_should_displayCorrectTitle);
-        RUN_TEST(test_givenNewDescriptionAdded_should_correctlyChangeDescription);
-        RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
-		RUN_TEST(test_givenThreeSubmenusWithTwoLevelsEach_should_correctContainAllInformation);
-		RUN_TEST(test_givenSubmenuIsChanged_then_newCurrentShouldBeUpdated);
-		RUN_TEST(test_ifCursorIsMovedAndSubmenuIsChanged_should_enterCorrectSubmenu);
-        UNITY_END();
+	UNITY_BEGIN();
+	RUN_TEST(test_givenMenuIsInitialized_should_displayCorrectTitle);
+	RUN_TEST(test_givenNewDescriptionAdded_should_correctlyChangeDescription);
+	RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
+	RUN_TEST(test_givenThreeSubmenusWithTwoLevelsEach_should_correctContainAllInformation);
+	RUN_TEST(test_givenSubmenuIsChanged_then_newCurrentShouldBeUpdated);
+	RUN_TEST(test_ifCursorIsMovedAndSubmenuIsChanged_should_enterCorrectSubmenu);
+	UNITY_END();
 }
 
