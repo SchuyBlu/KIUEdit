@@ -51,9 +51,17 @@ check_if_exists() {
 	fi
 }
 
+kill_container_if_exists() {
+	if [ -n "$( docker ps | grep $CONTAINER_NAME )" ]; then
+		docker kill $CONTAINER_NAME > /dev/null
+		docker container rm $CONTAINER_NAME > /dev/null
+	fi
+}
+
 mount_container() {
 	check_for_sshfs
 	check_if_exists
+	kill_container_if_exists
 
 	# Run and retrieve IP address.
 	docker run --name ${CONTAINER_NAME} -dt ${IMAGE_NAME}
@@ -95,6 +103,11 @@ do
 			build_image
 			;;
 		m)
+			# Must be root
+			if [ "$(id -u)" -ne "0" ]; then
+				echo "Must run with root permissions to mount."
+				exit 0
+			fi
 			if [ -n "${OPTARG}" ]; then
 				CONTAINER_NAME="${OPTARG}"
 			fi
@@ -102,6 +115,10 @@ do
 			exit 0
 			;;
 		u)
+			if [ "$(id -u)" -ne "0" ]; then
+				echo "Must run with root permissions to unmount."
+				exit 0
+			fi
 			if [ -n "${OPTARG}" ]; then
 				CONTAINER_NAME="${OPTARG}"
 			fi
