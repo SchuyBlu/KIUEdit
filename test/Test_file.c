@@ -206,7 +206,7 @@ void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 	SaveFile tsave;
 	Weapon *first_blade = NULL;
 
-	tsave.fp = fopen("test/input/first_blade_6r.bin", "r+");
+	tsave.fp = fopen("test/input/file/first_blade_6r.bin", "r+");
 	if (!tsave.fp) {
 		fprintf(stderr, "Error opening first blade file.\n");
 		return;
@@ -229,7 +229,7 @@ void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
 	SaveFile tsave;
 	Weapon *gaol_blade = NULL;
 
-	tsave.fp = fopen("test/input/gaol_blade_6r6m.bin", "r+");
+	tsave.fp = fopen("test/input/file/gaol_blade_6r6m.bin", "r+");
 	if (!tsave.fp) {
 		fprintf(stderr, "Error opening gaol blade file.\n");
 		return;
@@ -252,7 +252,7 @@ void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 	SaveFile tsave;
 	Weapon *drill_arm = NULL;
 
-	tsave.fp = fopen("test/input/drill_arm_6m.bin", "r+");
+	tsave.fp = fopen("test/input/file/drill_arm_6m.bin", "r+");
 	if (!tsave.fp) {
 		fprintf(stderr, "Error opening drill arm file.\n");
 		return;
@@ -289,6 +289,34 @@ void test_givenMetaDataAndStars_should_combineToCorrectBytes(void)
 }
 
 
+void test_givenCookieCutterDrillArm_should_mapToCorrectMods(void)
+{
+	SaveFile tsave;
+	Weapon *drill_arm = NULL;
+
+	tsave.fp = fopen("test/input/file/drill_arm_cookie.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening drill arm file.\n");
+		return;
+	}
+
+	drill_arm = fetch_savefile_weapon(&tsave, 0x0);
+
+	TEST_ASSERT_EQUAL_STRING("Drill Arm", drill_arm->name);
+	TEST_ASSERT_EQUAL_FLOAT(4.5, (float)drill_arm->ranged / 2);
+	TEST_ASSERT_EQUAL_UINT8(0, drill_arm->melee);
+	TEST_ASSERT_EQUAL_STRING("Shot Range +3", drill_arm->mod1);
+	TEST_ASSERT_EQUAL_STRING("Shot Homing +3", drill_arm->mod2);
+	TEST_ASSERT_EQUAL_STRING("Evasion +4", drill_arm->mod3);
+	TEST_ASSERT_EQUAL_STRING("Dash ch. shot +4", drill_arm->mod4);
+	TEST_ASSERT_EQUAL_STRING("Effect Duration +4", drill_arm->mod5);
+	TEST_ASSERT_EQUAL_STRING("Overall Defense -4", drill_arm->mod6);
+
+	fclose(tsave.fp);
+	destroy_weapon(drill_arm);
+}
+
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -302,6 +330,7 @@ int main(void)
 	RUN_TEST(test_givenGaolBladeAndBothSixStars_should_containCorrectInfo);
 	RUN_TEST(test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo);
 	RUN_TEST(test_givenMetaDataAndStars_should_combineToCorrectBytes);
+	RUN_TEST(test_givenCookieCutterDrillArm_should_mapToCorrectMods);
 	UNITY_END();
 }
 

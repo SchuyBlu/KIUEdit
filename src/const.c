@@ -145,7 +145,7 @@ const char *ARM_STRINGS[] = {
 };
 
 
-// Hex value + 1 of each modifier corresponds to index of modifier.
+// Hex value - 1 of each modifier corresponds to index of modifier.
 const char *MOD_STRINGS[] = {
 	"Standing ch. shot +1",
 	"Standing ch. shot +2",

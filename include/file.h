@@ -106,6 +106,22 @@ static void populate_star_data(Weapon *weapon, uint32_t data);
 
 
 /*
+ * Maps a value to a string by accessed MOD_STRINGS (const.c). The value
+ * is the index required + 1.
+ * `slot` - double pointer to string, to allow modifying in place.
+ * `val` - Index + 1 of the string.
+ */
+static void populate_mod_check(const char **slot, uint8_t val);
+
+
+/*
+ * Internal function for populating mod data for weapon.
+ * `weapon` - weapon whose data is being populated.
+ * `fp` - Pointer to file being read from.
+ */
+static void populate_mod_data(Weapon *weapon, FILE *fp);
+
+/*
  * Retrieves weapon from the file and returns it..
  * `save` - save file struct to be saved into.
  * `offset` - offset of weapon being read.

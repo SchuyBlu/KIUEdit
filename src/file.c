@@ -112,6 +112,36 @@ static void populate_star_data(Weapon *weapon, uint32_t data)
 }
 
 
+static void populate_mod_check(const char **slot, uint8_t index)
+{
+	if (index == 0)
+		return;
+
+	*slot = (const char *const)MOD_STRINGS[index - 1];
+}
+
+
+static void populate_mod_data(Weapon *weapon, FILE *fp)
+{
+	unsigned long error_vals[6];
+
+	// TODO: Utilize error values + feof ferror to report errors.
+	error_vals[0] = fread(&weapon->bin_mod1, 2, 1, fp);
+	error_vals[1] = fread(&weapon->bin_mod2, 2, 1, fp);
+	error_vals[2] = fread(&weapon->bin_mod3, 2, 1, fp);
+	error_vals[3] = fread(&weapon->bin_mod4, 2, 1, fp);
+	error_vals[4] = fread(&weapon->bin_mod5, 2, 1, fp);
+	error_vals[5] = fread(&weapon->bin_mod6, 2, 1, fp);
+
+	populate_mod_check(&weapon->mod1, weapon->bin_mod1);
+	populate_mod_check(&weapon->mod2, weapon->bin_mod2);
+	populate_mod_check(&weapon->mod3, weapon->bin_mod3);
+	populate_mod_check(&weapon->mod4, weapon->bin_mod4);
+	populate_mod_check(&weapon->mod5, weapon->bin_mod5);
+	populate_mod_check(&weapon->mod6, weapon->bin_mod6);
+}
+
+
 Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 {
 	uint32_t region = 0;
@@ -129,6 +159,10 @@ Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 	region = 0;
 	fread(&region, 4, 1, save->fp);
 	populate_star_data(weapon, region);
+
+	// We are now interested in mod data.
+	fseek(save->fp, offset + 0x14, SEEK_SET);
+	populate_mod_data(weapon, save->fp);
 
 	return weapon;
 }

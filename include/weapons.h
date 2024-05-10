@@ -42,14 +42,14 @@ typedef struct Weapon {
 
 	// Region to hold human readaable data.
 	const char *name; // Stack allocated, do not free
+	const char *mod1;
+	const char *mod2;
+	const char *mod3;
+	const char *mod4;
+	const char *mod5;
+	const char *mod6;
 	uint8_t ranged;
 	uint8_t melee;
-	char *mod1;
-	char *mod2;
-	char *mod3;
-	char *mod4;
-	char *mod5;
-	char *mod6;
 } Weapon;
 
 

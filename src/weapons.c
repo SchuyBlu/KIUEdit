@@ -33,15 +33,6 @@ Weapon *weapon_init(Weapon *weapon)
 
 void destroy_weapon(Weapon *weapon)
 {
-	if (weapon->mod1 != NULL) {
-		free(weapon->mod1);
-		free(weapon->mod2);
-		free(weapon->mod3);
-		free(weapon->mod4);
-		free(weapon->mod5);
-		free(weapon->mod6);
-	}
-
 	free(weapon);
 }
 
