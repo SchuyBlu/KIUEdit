@@ -6,6 +6,7 @@ build
 
 # Vim related files
 *.json
+compile_flags.txt
 
 # VSCode stuff
 .vscode

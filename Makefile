@@ -34,7 +34,7 @@ SANITIZE=-fsanitize=address
 .PRECIOUS: $(PATHO)%.o
 
 # Build 3DS files.
-3ds:
+release:
 	@make -f Makefile.3ds
 
 # Checks test result files and outputs failures and ignores

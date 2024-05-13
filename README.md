@@ -9,20 +9,20 @@ KIUEdit is a save editor for Kid Icarus: Uprising on the 3DS. The application ru
 
 ### Building 3dsx
 
-To build the 3dsx file call `make 3dsx`.
+To build the 3dsx file call `make release`.
 
 ### Building with Docker
-You can run `./run.sh 3dsx` to build the `.3dsx` file. This calls docker, so `sudo` may be required depending on your system configuration.
+You can run `./run.sh release` to build the `.3dsx` file. This calls docker, so `sudo` may be required depending on your system configuration.
 
 ## Testing
 To run tests you'll need to install the [Unity Test](https://github.com/ThrowTheSwitch/Unity) unit testing framework. Please place this in the project directory. Rename the testing framework directory to `unity` if it isn't already named so. You can run the following to run each test.
 
-### Natively
+### With Make
 ```
 make test
 ```
 
-### Within Docker
+### With Docker
 ```
 ./run.sh test
 ```
@@ -45,4 +45,3 @@ The following are features that will potentially be added, but are not a priorit
 - Add new weapons.
 - Modify data shown in the vault.
 - A simple GUI.
-

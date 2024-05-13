@@ -7,15 +7,15 @@
 // a testing build or a release build.
 #ifdef TEST_BUILD
 #define GAME_DATA_PATH "data"
-#else
+#else 
 #define GAME_DATA_PATH "data"
 #endif
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <assert.h>
-#include <stdint.h>
+#include <assert.h> 
+#include <stdint.h> 
 #include "offsets.h"
 #include "weapons.h"
 #include "const.h"
@@ -34,6 +34,7 @@ typedef struct SaveFile {
 	uint32_t hearts;
 	uint32_t donate_p;
 	uint32_t donate_v;
+	Weapon *weapons;
 } SaveFile;
 
 
@@ -111,7 +112,7 @@ static void populate_star_data(Weapon *weapon, uint32_t data);
  * `slot` - double pointer to string, to allow modifying in place.
  * `val` - Index + 1 of the string.
  */
-static void populate_mod_check(const char **slot, uint8_t val);
+static void populate_mod_string(const char **slot, uint8_t val);
 
 
 /*
@@ -129,4 +130,11 @@ static void populate_mod_data(Weapon *weapon, FILE *fp);
  * `Weapon*` - pointer to weapon struct.
  */
 Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset);
+
+
+/*
+ * Parses a save file and reads in every weapon.
+ * `save` - save file struct to be saved into.
+ */
+void populate_weapon_array(SaveFile *save);
 

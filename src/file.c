@@ -4,6 +4,7 @@
 void savefile_init(SaveFile *save, char *path)
 {
 	save->fp = NULL;
+	save->weapons = NULL;
 
 	// Attempt to open save file.
 	save->fp = fopen(path, "r+");
@@ -112,7 +113,7 @@ static void populate_star_data(Weapon *weapon, uint32_t data)
 }
 
 
-static void populate_mod_check(const char **slot, uint8_t index)
+static void populate_mod_string(const char **slot, uint8_t index)
 {
 	if (index == 0)
 		return;
@@ -133,12 +134,12 @@ static void populate_mod_data(Weapon *weapon, FILE *fp)
 	error_vals[4] = fread(&weapon->bin_mod5, 2, 1, fp);
 	error_vals[5] = fread(&weapon->bin_mod6, 2, 1, fp);
 
-	populate_mod_check(&weapon->mod1, weapon->bin_mod1);
-	populate_mod_check(&weapon->mod2, weapon->bin_mod2);
-	populate_mod_check(&weapon->mod3, weapon->bin_mod3);
-	populate_mod_check(&weapon->mod4, weapon->bin_mod4);
-	populate_mod_check(&weapon->mod5, weapon->bin_mod5);
-	populate_mod_check(&weapon->mod6, weapon->bin_mod6);
+	populate_mod_string(&weapon->mod1, weapon->bin_mod1);
+	populate_mod_string(&weapon->mod2, weapon->bin_mod2);
+	populate_mod_string(&weapon->mod3, weapon->bin_mod3);
+	populate_mod_string(&weapon->mod4, weapon->bin_mod4);
+	populate_mod_string(&weapon->mod5, weapon->bin_mod5);
+	populate_mod_string(&weapon->mod6, weapon->bin_mod6);
 }
 
 
@@ -166,4 +167,5 @@ Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 
 	return weapon;
 }
+
 
