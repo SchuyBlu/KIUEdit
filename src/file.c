@@ -5,6 +5,8 @@ void savefile_init(SaveFile *save, char *path)
 {
 	save->fp = NULL;
 	save->weapons = NULL;
+	save->w_cap = 1;
+	save->w_len = 0;
 
 	// Attempt to open save file.
 	save->fp = fopen(path, "r+");
@@ -16,7 +18,16 @@ void savefile_init(SaveFile *save, char *path)
 
 void destroy_savefile(SaveFile *save)
 {
-	fclose(save->fp);
+	if (save->fp)
+		fclose(save->fp);
+
+	if (save->weapons) {
+		for (int i = 0; i < save->w_len; i++) {
+			if (save->weapons[i])
+				free(save->weapons[i]);
+		}
+		free(save->weapons);
+	}
 }
 
 
@@ -78,6 +89,17 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid)
 	return weapons[wid];
 }
 
+
+static bool check_if_weapon_present(SaveFile *save, uint32_t offset)
+{
+	uint32_t result = 0;
+
+	fseek(save->fp, offset + 0x5, SEEK_SET);
+
+	fread(&result, 2, 1, save->fp);
+
+	return result == 0;
+}
 
 static void populate_name_data(Weapon *weapon, uint32_t data) 
 {
@@ -168,4 +190,29 @@ Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 	return weapon;
 }
 
+void populate_savefile_weapons(SaveFile *save, uint32_t offset)
+{
+	// If is null, allocate memory.
+	if (!save->weapons) {
+		save->weapons = malloc(sizeof(Weapon*) * save->w_cap);
+		assert(save->weapons);
+		save->weapons[0] = NULL;
+	}
 
+	// Now read in first weapon.
+	while (!check_if_weapon_present(save, offset)) {
+		// Reallocate if len matches capacity.
+		if (save->w_len == save->w_cap) {
+			save->w_cap *= 2;
+			save->weapons = realloc(save->weapons, sizeof(Weapon*) * save->w_cap);
+			assert(save->weapons);
+			// NULL initialize array.
+			for (int i = save->w_len; i < save->w_cap; i++)
+				save->weapons[i] = NULL;
+		}
+
+		save->weapons[save->w_len] = fetch_savefile_weapon(save, offset);
+		save->w_len++;
+		offset += 0x20;
+	}
+}

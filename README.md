@@ -32,12 +32,13 @@ The output to the terminal will only show failed tests and any output from the a
 ## Todo
 The following features currently are incomplete:
 - Refactor out `assert` calls to properly handle errors (**high priority**).
-- Translate byte values to associated strings.
+- Create wrapper so that static functions can all be tested individually (**high priority**).
+- Refactor modules to follow one design pattern concerning struct creation instead of a bizarre combination (**high priority**).
+- Write python script to generate binaries, shouldn't have binary testing files on the repo (**high priority**).
+- Refactor unsafe function use to handle errors.
 - Read weapon data in save (50%).
 - Test arrays.h, archive.h.
 - Add ability to modify data on 3DS.
-- `make release`
-- `make 3ds`
 - Translate byte values to associated strings.
 
 The following are features that will potentially be added, but are not a priority:

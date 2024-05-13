@@ -16,6 +16,7 @@
 #include <string.h>
 #include <assert.h> 
 #include <stdint.h> 
+#include <stdbool.h>
 #include "offsets.h"
 #include "weapons.h"
 #include "const.h"
@@ -34,7 +35,9 @@ typedef struct SaveFile {
 	uint32_t hearts;
 	uint32_t donate_p;
 	uint32_t donate_v;
-	Weapon *weapons;
+	Weapon **weapons;
+	uint32_t w_len;
+	uint32_t w_cap;
 } SaveFile;
 
 
@@ -91,6 +94,14 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid);
 
 
 /*
+ * Checks if there is a weapon present at the offset given.
+ * `save` - Savefile struct with fp being read from.
+ * `offset` - Offset being read from.
+ */
+static bool check_if_weapon_present(SaveFile *save, uint32_t offset);
+
+
+/*
  * Internal function for populating name data for weapon.
  * `weapon` - weapon whose data is being populated.
  * `data` - data pertaining to the name.
@@ -135,6 +146,7 @@ Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset);
 /*
  * Parses a save file and reads in every weapon.
  * `save` - save file struct to be saved into.
+ * `offset` - offset being read from in savefile.
  */
-void populate_weapon_array(SaveFile *save);
+void populate_savefile_weapons(SaveFile *save, uint32_t offset);
 

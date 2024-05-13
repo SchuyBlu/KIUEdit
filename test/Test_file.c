@@ -218,7 +218,7 @@ void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)first_blade->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)first_blade->melee / 2);
 
-	fclose(tsave.fp);
+	destroy_savefile(&tsave);
 	destroy_weapon(first_blade);
 }
 
@@ -241,7 +241,7 @@ void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->melee / 2);
 
-	fclose(tsave.fp);
+	destroy_savefile(&tsave);
 	destroy_weapon(gaol_blade);
 }
 
@@ -264,7 +264,7 @@ void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)drill_arm->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(4.5, (float)drill_arm->melee / 2);
 
-	fclose(tsave.fp);
+	destroy_savefile(&tsave);
 	destroy_weapon(drill_arm);
 }
 
@@ -311,8 +311,58 @@ void test_givenCookieCutterDrillArm_should_mapToCorrectMods(void)
 	TEST_ASSERT_EQUAL_STRING("Effect Duration +4", drill_arm->mod5);
 	TEST_ASSERT_EQUAL_STRING("Overall Defense -4", drill_arm->mod6);
 
-	fclose(tsave.fp);
+	destroy_savefile(&tsave);
 	destroy_weapon(drill_arm);
+}
+
+
+// Rewrite once wrapper is written.
+void test_checkIfWeaponPresent_implicitlyViaEmptyWeaponFile(void)
+{
+	SaveFile tsave;
+	tsave.fp = NULL;
+	tsave.weapons = NULL;
+	tsave.w_cap = 1;
+	tsave.w_len = 0;
+
+	tsave.fp = fopen("test/input/file/empty.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening empty file.\n");
+		return;
+	}
+
+	populate_savefile_weapons(&tsave, 0x0);	
+	TEST_ASSERT_EQUAL_UINT32(0, tsave.w_len);
+
+	destroy_savefile(&tsave);
+}
+
+
+void test_ifSaveFileIsFilled_should_readUntilZeroedWeapon(void)
+{
+	SaveFile tsave;
+	tsave.fp = NULL;
+	tsave.weapons = NULL;
+	tsave.w_cap = 1;
+	tsave.w_len = 0;
+
+	tsave.fp = fopen("test/input/file/weapon_list.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening weapon list file.\n");
+		return;
+	}
+
+	populate_savefile_weapons(&tsave, 0x0);	
+	
+	TEST_ASSERT_EQUAL_STRING("Eyetrack Orbitars", tsave.weapons[0]->name);
+	TEST_ASSERT_EQUAL_STRING("Fortune Bow", tsave.weapons[1]->name);	
+	TEST_ASSERT_EQUAL_STRING("Predator Cannon", tsave.weapons[2]->name);
+	TEST_ASSERT_EQUAL_STRING("Bowl Arm", tsave.weapons[3]->name);
+	TEST_ASSERT_EQUAL_STRING("Stealth Claws", tsave.weapons[4]->name);
+	TEST_ASSERT_EQUAL_STRING("Jetstream Orbitars", tsave.weapons[5]->name);
+	TEST_ASSERT_EQUAL_STRING("Thanatos Staff", tsave.weapons[6]->name);
+
+	destroy_savefile(&tsave);
 }
 
 
@@ -330,6 +380,8 @@ int main(void)
 	RUN_TEST(test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo);
 	RUN_TEST(test_givenMetaDataAndStars_should_combineToCorrectBytes);
 	RUN_TEST(test_givenCookieCutterDrillArm_should_mapToCorrectMods);
+	RUN_TEST(test_checkIfWeaponPresent_implicitlyViaEmptyWeaponFile);
+	RUN_TEST(test_ifSaveFileIsFilled_should_readUntilZeroedWeapon);
 	UNITY_END();
 }
 
