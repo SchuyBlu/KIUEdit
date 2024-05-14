@@ -27,7 +27,7 @@ void test_ifSaveIsInitializedProperlyThenFile_should_beTruthy(void)
 void test_ifHeartsAreRead_should_returnProperHeartCount(void)
 {
 	uint32_t hearts;
-	hearts = _retrieve_hearts(&save, HEART_OFFSET);
+	hearts = retrieve_hearts(&save, HEART_OFFSET);
 	TEST_ASSERT_EQUAL_UINT32(9853047, hearts);
 }
 
@@ -200,6 +200,25 @@ void test_ifCidAndWipValid_should_returnCorrectString(void)
 }
 
 
+void test_givenEmptyWeapon_should_returnFalse(void)
+{
+	SaveFile tsave;
+	tsave.fp = NULL;
+	tsave.weapons.array = NULL;
+	tsave.weapons.cap = 1;
+	tsave.weapons.len = 0;
+
+	tsave.fp = fopen("test/input/file/empty.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening empty file.\n");
+		return;
+	}
+
+	TEST_ASSERT_TRUE(!check_if_weapon_present(&tsave, 0x0));
+}
+
+
+// TESTS: populate_name_data, populate_star_data
 void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 {
 	SaveFile tsave;
@@ -223,6 +242,7 @@ void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 }
 
 
+// TESTS: populate_name_data, populate_star_data
 void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
 {
 	SaveFile tsave;
@@ -246,6 +266,7 @@ void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
 }
 
 
+// TESTS: populate_name_data, populate_star_data
 void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 {
 	SaveFile tsave;
@@ -269,6 +290,7 @@ void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 }
 
 
+// TESTS: populate_name_data, ability to separate name from metadata.
 void test_givenMetaDataAndStars_should_combineToCorrectBytes(void)
 {
 	uint8_t cid = 0, wid = 0;
@@ -288,6 +310,7 @@ void test_givenMetaDataAndStars_should_combineToCorrectBytes(void)
 }
 
 
+// TESTS: populate_mod_string, populate_mod_data, fetch_savefile_weapon
 void test_givenCookieCutterDrillArm_should_mapToCorrectMods(void)
 {
 	SaveFile tsave;
@@ -316,35 +339,13 @@ void test_givenCookieCutterDrillArm_should_mapToCorrectMods(void)
 }
 
 
-// Rewrite once wrapper is written.
-void test_checkIfWeaponPresent_implicitlyViaEmptyWeaponFile(void)
-{
-	SaveFile tsave;
-	tsave.fp = NULL;
-	tsave.weapons = NULL;
-	tsave.w_cap = 1;
-	tsave.w_len = 0;
-
-	tsave.fp = fopen("test/input/file/empty.bin", "r+");
-	if (!tsave.fp) {
-		fprintf(stderr, "Error opening empty file.\n");
-		return;
-	}
-
-	populate_savefile_weapons(&tsave, 0x0);	
-	TEST_ASSERT_EQUAL_UINT32(0, tsave.w_len);
-
-	destroy_savefile(&tsave);
-}
-
-
 void test_ifSaveFileIsFilled_should_readUntilZeroedWeapon(void)
 {
 	SaveFile tsave;
 	tsave.fp = NULL;
-	tsave.weapons = NULL;
-	tsave.w_cap = 1;
-	tsave.w_len = 0;
+	tsave.weapons.array = NULL;
+	tsave.weapons.cap = 1;
+	tsave.weapons.len = 0;
 
 	tsave.fp = fopen("test/input/file/weapon_list.bin", "r+");
 	if (!tsave.fp) {
@@ -354,13 +355,13 @@ void test_ifSaveFileIsFilled_should_readUntilZeroedWeapon(void)
 
 	populate_savefile_weapons(&tsave, 0x0);	
 	
-	TEST_ASSERT_EQUAL_STRING("Eyetrack Orbitars", tsave.weapons[0]->name);
-	TEST_ASSERT_EQUAL_STRING("Fortune Bow", tsave.weapons[1]->name);	
-	TEST_ASSERT_EQUAL_STRING("Predator Cannon", tsave.weapons[2]->name);
-	TEST_ASSERT_EQUAL_STRING("Bowl Arm", tsave.weapons[3]->name);
-	TEST_ASSERT_EQUAL_STRING("Stealth Claws", tsave.weapons[4]->name);
-	TEST_ASSERT_EQUAL_STRING("Jetstream Orbitars", tsave.weapons[5]->name);
-	TEST_ASSERT_EQUAL_STRING("Thanatos Staff", tsave.weapons[6]->name);
+	TEST_ASSERT_EQUAL_STRING("Eyetrack Orbitars", tsave.weapons.array[0]->name);
+	TEST_ASSERT_EQUAL_STRING("Fortune Bow", tsave.weapons.array[1]->name);	
+	TEST_ASSERT_EQUAL_STRING("Predator Cannon", tsave.weapons.array[2]->name);
+	TEST_ASSERT_EQUAL_STRING("Bowl Arm", tsave.weapons.array[3]->name);
+	TEST_ASSERT_EQUAL_STRING("Stealth Claws", tsave.weapons.array[4]->name);
+	TEST_ASSERT_EQUAL_STRING("Jetstream Orbitars", tsave.weapons.array[5]->name);
+	TEST_ASSERT_EQUAL_STRING("Thanatos Staff", tsave.weapons.array[6]->name);
 
 	destroy_savefile(&tsave);
 }
@@ -375,12 +376,12 @@ int main(void)
 	RUN_TEST(test_assertModStringLen_should_MatcheModValueLen);
 	RUN_TEST(test_ifCidPassed_should_returnCorrectArray);
 	RUN_TEST(test_ifCidAndWipValid_should_returnCorrectString);
+	RUN_TEST(test_givenEmptyWeapon_should_returnFalse);
 	RUN_TEST(test_givenFirstBladeAndSixStars_should_containCorrectInfo);
 	RUN_TEST(test_givenGaolBladeAndBothSixStars_should_containCorrectInfo);
 	RUN_TEST(test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo);
 	RUN_TEST(test_givenMetaDataAndStars_should_combineToCorrectBytes);
 	RUN_TEST(test_givenCookieCutterDrillArm_should_mapToCorrectMods);
-	RUN_TEST(test_checkIfWeaponPresent_implicitlyViaEmptyWeaponFile);
 	RUN_TEST(test_ifSaveFileIsFilled_should_readUntilZeroedWeapon);
 	UNITY_END();
 }

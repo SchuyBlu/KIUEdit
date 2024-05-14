@@ -23,6 +23,19 @@
 
 
 /*
+ * Simple struct defining an array of weapon struct pointers, as well
+ * as the capacity and length.
+ * `array` - array of weapon struct pointer.
+ * `len` - length of weapons array.
+ * `cap` - capacity of weapons array.
+ */
+typedef struct Weapons {
+	Weapon **array;
+	uint32_t len;
+	uint32_t cap;
+} Weapons;
+
+/*
  * Struct meant to contain all relevant save file data for Kid Icarus
  * Uprising.
  * `fp` - file pointer to save file.
@@ -35,9 +48,7 @@ typedef struct SaveFile {
 	uint32_t hearts;
 	uint32_t donate_p;
 	uint32_t donate_v;
-	Weapon **weapons;
-	uint32_t w_len;
-	uint32_t w_cap;
+	Weapons weapons;
 } SaveFile;
 
 
@@ -61,7 +72,7 @@ void destroy_savefile(SaveFile *save);
  * `save` - save file struct.
  * `offset` - offset to start reading from in save file.
  */
-uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset);
+uint32_t retrieve_hearts(SaveFile *save, D_OFFSET offset);
 
 
 /*
@@ -69,7 +80,7 @@ uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset);
  * function.
  * `save` - save file struct to be saved into.
  */
- void fetch_savefile_hearts(SaveFile *save);
+void fetch_savefile_hearts(SaveFile *save);
 
 
 /*
@@ -98,7 +109,7 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid);
  * `save` - Savefile struct with fp being read from.
  * `offset` - Offset being read from.
  */
-static bool check_if_weapon_present(SaveFile *save, uint32_t offset);
+bool check_if_weapon_present(SaveFile *save, uint32_t offset);
 
 
 /*
@@ -106,7 +117,7 @@ static bool check_if_weapon_present(SaveFile *save, uint32_t offset);
  * `weapon` - weapon whose data is being populated.
  * `data` - data pertaining to the name.
  */
-static void populate_name_data(Weapon *weapon, uint32_t data);
+void populate_name_data(Weapon *weapon, uint32_t data);
 
 
 /*
@@ -114,7 +125,7 @@ static void populate_name_data(Weapon *weapon, uint32_t data);
  * `weapon` - weapon whose data is being populated.
  * `data` - data pertaining to stars.
  */
-static void populate_star_data(Weapon *weapon, uint32_t data);
+void populate_star_data(Weapon *weapon, uint32_t data);
 
 
 /*
@@ -123,7 +134,7 @@ static void populate_star_data(Weapon *weapon, uint32_t data);
  * `slot` - double pointer to string, to allow modifying in place.
  * `val` - Index + 1 of the string.
  */
-static void populate_mod_string(const char **slot, uint8_t val);
+void populate_mod_string(const char **slot, uint8_t val);
 
 
 /*
@@ -131,7 +142,7 @@ static void populate_mod_string(const char **slot, uint8_t val);
  * `weapon` - weapon whose data is being populated.
  * `fp` - Pointer to file being read from.
  */
-static void populate_mod_data(Weapon *weapon, FILE *fp);
+void populate_mod_data(Weapon *weapon, FILE *fp);
 
 /*
  * Retrieves weapon from the file and returns it..

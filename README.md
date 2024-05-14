@@ -31,9 +31,6 @@ The output to the terminal will only show failed tests and any output from the a
 
 ## Todo
 The following features currently are incomplete:
-- Refactor out `assert` calls to properly handle errors (**high priority**).
-- Create wrapper so that static functions can all be tested individually (**high priority**).
-- Refactor modules to follow one design pattern concerning struct creation instead of a bizarre combination (**high priority**).
 - Write python script to generate binaries, shouldn't have binary testing files on the repo (**high priority**).
 - Refactor unsafe function use to handle errors.
 - Read weapon data in save (50%).

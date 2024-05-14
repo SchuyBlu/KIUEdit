@@ -73,6 +73,7 @@ $(PATHO)%.o:: $(PATHU)%.c
 # Make the necessary directories to run test if they don't exist
 $(PATHB):
 	mkdir -p $(PATHB)
+	mkdir -p $(PATHB)log/
 
 $(PATHO):
 	mkdir -p $(PATHO)

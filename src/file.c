@@ -4,11 +4,8 @@
 void savefile_init(SaveFile *save, char *path)
 {
 	save->fp = NULL;
-	save->weapons = NULL;
-	save->w_cap = 1;
-	save->w_len = 0;
+	save->weapons = (Weapons){ NULL, 0, 1 };
 
-	// Attempt to open save file.
 	save->fp = fopen(path, "r+");
 	assert(save->fp);
 
@@ -18,20 +15,20 @@ void savefile_init(SaveFile *save, char *path)
 
 void destroy_savefile(SaveFile *save)
 {
-	if (save->fp)
-		fclose(save->fp);
+	if (!save->weapons.array)
+		return;
 
-	if (save->weapons) {
-		for (int i = 0; i < save->w_len; i++) {
-			if (save->weapons[i])
-				free(save->weapons[i]);
-		}
-		free(save->weapons);
-	}
+	if (save->weapons.len == 0)
+		return;
+
+	for (int i = 0; i < save->weapons.len; i++)
+		free(save->weapons.array[i]);
+
+	free(save->weapons.array);
 }
 
 
-uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset)
+uint32_t retrieve_hearts(SaveFile *save, D_OFFSET offset)
 {
 	// Set heart buffer to three because I'm only seeking out 3 bytes
 	uint32_t hearts = 0;
@@ -46,9 +43,9 @@ uint32_t _retrieve_hearts(SaveFile *save, D_OFFSET offset)
 
 void fetch_savefile_hearts(SaveFile *save)
 {
-	save->hearts = _retrieve_hearts(save, HEART_OFFSET);
-	save->donate_p = _retrieve_hearts(save, PALU_OFFSET);
-	save->donate_v = _retrieve_hearts(save, VIRIDI_OFFSET);
+	save->hearts = retrieve_hearts(save, HEART_OFFSET);
+	save->donate_p = retrieve_hearts(save, PALU_OFFSET);
+	save->donate_v = retrieve_hearts(save, VIRIDI_OFFSET);
 }
 
 
@@ -90,18 +87,18 @@ const char *const map_to_weapon(uint8_t cid, uint8_t wid)
 }
 
 
-static bool check_if_weapon_present(SaveFile *save, uint32_t offset)
+bool check_if_weapon_present(SaveFile *save, uint32_t offset)
 {
 	uint32_t result = 0;
 
 	fseek(save->fp, offset + 0x5, SEEK_SET);
-
 	fread(&result, 2, 1, save->fp);
 
-	return result == 0;
+	return result != 0;
 }
 
-static void populate_name_data(Weapon *weapon, uint32_t data) 
+
+void populate_name_data(Weapon *weapon, uint32_t data) 
 {
 	uint8_t wid = 0, cid = 0;
 
@@ -116,7 +113,7 @@ static void populate_name_data(Weapon *weapon, uint32_t data)
 }
 
 
-static void populate_star_data(Weapon *weapon, uint32_t data)
+void populate_star_data(Weapon *weapon, uint32_t data)
 {
 	uint8_t star_data1 = 0, star_data2 = 0;
 
@@ -135,7 +132,7 @@ static void populate_star_data(Weapon *weapon, uint32_t data)
 }
 
 
-static void populate_mod_string(const char **slot, uint8_t index)
+void populate_mod_string(const char **slot, uint8_t index)
 {
 	if (index == 0)
 		return;
@@ -144,17 +141,14 @@ static void populate_mod_string(const char **slot, uint8_t index)
 }
 
 
-static void populate_mod_data(Weapon *weapon, FILE *fp)
+void populate_mod_data(Weapon *weapon, FILE *fp)
 {
-	unsigned long error_vals[6];
-
-	// TODO: Utilize error values + feof ferror to report errors.
-	error_vals[0] = fread(&weapon->bin_mod1, 2, 1, fp);
-	error_vals[1] = fread(&weapon->bin_mod2, 2, 1, fp);
-	error_vals[2] = fread(&weapon->bin_mod3, 2, 1, fp);
-	error_vals[3] = fread(&weapon->bin_mod4, 2, 1, fp);
-	error_vals[4] = fread(&weapon->bin_mod5, 2, 1, fp);
-	error_vals[5] = fread(&weapon->bin_mod6, 2, 1, fp);
+	fread(&weapon->bin_mod1, 2, 1, fp);
+	fread(&weapon->bin_mod2, 2, 1, fp);
+	fread(&weapon->bin_mod3, 2, 1, fp);
+	fread(&weapon->bin_mod4, 2, 1, fp);
+	fread(&weapon->bin_mod5, 2, 1, fp);
+	fread(&weapon->bin_mod6, 2, 1, fp);
 
 	populate_mod_string(&weapon->mod1, weapon->bin_mod1);
 	populate_mod_string(&weapon->mod2, weapon->bin_mod2);
@@ -193,26 +187,27 @@ Weapon *fetch_savefile_weapon(SaveFile *save, uint32_t offset)
 void populate_savefile_weapons(SaveFile *save, uint32_t offset)
 {
 	// If is null, allocate memory.
-	if (!save->weapons) {
-		save->weapons = malloc(sizeof(Weapon*) * save->w_cap);
-		assert(save->weapons);
-		save->weapons[0] = NULL;
+	if (!save->weapons.array) {
+		save->weapons.array = malloc(sizeof(Weapon*) * save->weapons.cap);
+		assert(save->weapons.array);
+		save->weapons.array[0] = NULL;
 	}
 
 	// Now read in first weapon.
-	while (!check_if_weapon_present(save, offset)) {
+	while (check_if_weapon_present(save, offset)) {
 		// Reallocate if len matches capacity.
-		if (save->w_len == save->w_cap) {
-			save->w_cap *= 2;
-			save->weapons = realloc(save->weapons, sizeof(Weapon*) * save->w_cap);
-			assert(save->weapons);
+		if (save->weapons.len == save->weapons.cap) {
+			save->weapons.cap *= 2;
+			save->weapons.array = realloc(save->weapons.array, sizeof(Weapon*) * save->weapons.cap);
+			assert(save->weapons.array);
+
 			// NULL initialize array.
-			for (int i = save->w_len; i < save->w_cap; i++)
-				save->weapons[i] = NULL;
+			for (int i = save->weapons.len; i < save->weapons.cap; i++)
+				save->weapons.array[i] = NULL;
 		}
 
-		save->weapons[save->w_len] = fetch_savefile_weapon(save, offset);
-		save->w_len++;
+		save->weapons.array[save->weapons.len] = fetch_savefile_weapon(save, offset);
+		save->weapons.len++;
 		offset += 0x20;
 	}
 }

@@ -84,7 +84,7 @@ void menu_init(Menu *menu, char *title, event action);
  * The function to be called recursively.
  * `submenu` - Internal submenu being destroyed.
  */
-static void _destroy_menu(Submenu *submenu);
+void _destroy_menu(Submenu *submenu);
 
 
 /*

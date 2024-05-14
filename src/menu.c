@@ -38,7 +38,7 @@ void menu_init(Menu *menu, char *title, event action)
 }
 
 
-static void _destroy_menu(Submenu *submenu)
+void _destroy_menu(Submenu *submenu)
 {
 	for (; submenu->dealloc_idx < submenu->len; submenu->dealloc_idx++) {
 		_destroy_menu(submenu->options[submenu->dealloc_idx]);
