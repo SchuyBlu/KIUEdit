@@ -12,8 +12,9 @@ compile_flags.txt
 .vscode
 .github/*
 
-# Ignore testing module
+# Ignore testing module and files
 unity
+*.bin
 
 # Ignore notes
 ./*.txt

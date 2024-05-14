@@ -39,6 +39,7 @@ release:
 
 # Checks test result files and outputs failures and ignores
 test: $(BUILD_PATHS) $(RESULTS)
+	@python3 $(PATHT)binaries.py
 	@echo "--------------------\nIGNORES:\n--------------------"
 	@echo `grep -s IGNORE $(PATHR)*.txt`
 	@echo "--------------------\nFAILURES:\n--------------------"
@@ -86,3 +87,4 @@ clean:
 	rm -f $(PATHO)*.o
 	rm -f $(PATHB)*.out
 	rm -f $(PATHR)*.txt
+	rm -f $(PATHT)input/*/*.bin

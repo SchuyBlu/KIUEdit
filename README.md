@@ -31,7 +31,6 @@ The output to the terminal will only show failed tests and any output from the a
 
 ## Todo
 The following features currently are incomplete:
-- Write python script to generate binaries, shouldn't have binary testing files on the repo (**high priority**).
 - Refactor unsafe function use to handle errors.
 - Read weapon data in save (50%).
 - Test arrays.h, archive.h.

@@ -194,7 +194,8 @@ void populate_savefile_weapons(SaveFile *save, uint32_t offset)
 	}
 
 	// Now read in first weapon.
-	while (check_if_weapon_present(save, offset)) {
+	int count = 0;
+	while (check_if_weapon_present(save, offset) && count != 999) {
 		// Reallocate if len matches capacity.
 		if (save->weapons.len == save->weapons.cap) {
 			save->weapons.cap *= 2;
@@ -209,5 +210,6 @@ void populate_savefile_weapons(SaveFile *save, uint32_t offset)
 		save->weapons.array[save->weapons.len] = fetch_savefile_weapon(save, offset);
 		save->weapons.len++;
 		offset += 0x20;
+		count++;
 	}
 }
