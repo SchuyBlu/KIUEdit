@@ -5,10 +5,7 @@ Script to generate binary test files.
 """
 import os
 
-"""
-gen_weapon_bin
-"""
-def get_weapon_bin(name, stars, mods):
+def get_weapon_bin(name: str, stars: list[str], mods: list[str]) -> bytes:
     """
     Generates a binary object in this format:
 
@@ -53,7 +50,7 @@ def get_weapon_bin(name, stars, mods):
     return bin_data
 
 
-def generate_bin_file(path, name, stars, mods):
+def generate_bin_file(path: str, name: str, stars: list[str], mods: list[str]) -> None:
     """
     Calls `get_weapon_bin` and writes to a binary file.
 
@@ -72,7 +69,7 @@ def generate_bin_file(path, name, stars, mods):
     with open(path, "wb") as file:
         file.write(bin_data)
 
-def generate_n_weapons(path, name, stars, mods, n):
+def generate_n_weapons(path: str, name: str, stars: list[str], mods: list[str], n: int) -> None:
     """
     Generates n weapons by calling `get_weapon_bin` n times. Writes to a 
     binary file.
