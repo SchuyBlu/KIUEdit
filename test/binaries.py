@@ -158,3 +158,12 @@ if __name__ == "__main__":
     with open(f"{prefix}weapon_list.bin", "wb") as file:
         file.write(bin)
     
+    # Generate file with 999 weapons
+    generate_n_weapons(
+        f"{prefix}max_weapons.bin",
+        "9c21",
+        ["09", "00"],
+        ["b5", "bb", "66", "0a", "92", "8a"],
+        999
+    )
+

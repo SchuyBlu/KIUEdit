@@ -367,6 +367,41 @@ void test_ifSaveFileIsFilled_should_readUntilZeroedWeapon(void)
 }
 
 
+void test_ifSaveFileMaxWeapons_should_readUntil999(void)
+{
+	SaveFile tsave;
+	tsave.fp = NULL;
+	tsave.weapons.array = NULL;
+	tsave.weapons.cap = 1;
+	tsave.weapons.len = 0;
+
+	tsave.fp = fopen("test/input/file/max_weapons.bin", "r+");
+	if (!tsave.fp) {
+		fprintf(stderr, "Error opening max weapons file.\n");
+		return;
+	}
+
+	populate_savefile_weapons(&tsave, 0x0);
+
+	// Must have 999 weapons and not read 32 sentinel bytes in test file.
+	TEST_ASSERT_EQUAL_UINT32(999, tsave.weapons.len);
+
+	for (int i = 0; i < 999; i++) {
+		TEST_ASSERT_EQUAL_STRING("Eyetrack Orbitars", tsave.weapons.array[i]->name);
+		TEST_ASSERT_EQUAL_FLOAT(4.5, ((float)tsave.weapons.array[i]->ranged) / 2);
+		TEST_ASSERT_EQUAL_FLOAT(0.0, ((float)tsave.weapons.array[i]->melee) / 2);
+		TEST_ASSERT_EQUAL_STRING("Shot Range +3", tsave.weapons.array[i]->mod1);
+		TEST_ASSERT_EQUAL_STRING("Shot Homing +3", tsave.weapons.array[i]->mod2);
+		TEST_ASSERT_EQUAL_STRING("Evasion +4", tsave.weapons.array[i]->mod3);
+		TEST_ASSERT_EQUAL_STRING("Dash ch. shot +4", tsave.weapons.array[i]->mod4);
+		TEST_ASSERT_EQUAL_STRING("Effect Duration +4", tsave.weapons.array[i]->mod5);
+		TEST_ASSERT_EQUAL_STRING("Overall Defense -4", tsave.weapons.array[i]->mod6);
+	}
+
+	destroy_savefile(&tsave);
+}
+
+
 int main(void)
 {
 	UNITY_BEGIN();
@@ -383,6 +418,7 @@ int main(void)
 	RUN_TEST(test_givenMetaDataAndStars_should_combineToCorrectBytes);
 	RUN_TEST(test_givenCookieCutterDrillArm_should_mapToCorrectMods);
 	RUN_TEST(test_ifSaveFileIsFilled_should_readUntilZeroedWeapon);
+	RUN_TEST(test_ifSaveFileMaxWeapons_should_readUntil999);
 	UNITY_END();
 }
 
