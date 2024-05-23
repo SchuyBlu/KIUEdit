@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <assert.h>
+#include "const.h"
 
 
 /*
@@ -59,6 +60,14 @@ typedef struct Weapon {
  * Returns: pointer to Weapon struct.
  */
 Weapon *weapon_init(Weapon *weapon);
+
+
+/*
+ * Will return the value of a weapon.
+ * `weapon` - Weapon struct being parsed.
+ * Returns: weapon value.
+ */
+uint32_t weapon_get_value(Weapon *weapon);
 
 
 /*

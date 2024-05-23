@@ -16,6 +16,8 @@ extern const char *ARM_STRINGS[];
 
 extern const char *MOD_STRINGS[];
 extern const float MOD_VALUES[];
+extern const float RANGED_VALUES[];
+extern const float MELEE_VALUES[];
 
 extern const size_t mod_strings_len;
 extern const size_t mod_values_len;

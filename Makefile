@@ -51,9 +51,12 @@ test: $(BUILD_PATHS) $(RESULTS)
 $(PATHR)%.txt: $(PATHB)%.out
 	-./$< > $@ 2>&1
 
-# Define Test output rules for executables that have more than
-# one dependency
+# Define Test output rules for executables that have more than one dependency.
 $(PATHB)Test_file.out: $(PATHO)Test_file.o $(PATHO)const.o $(PATHO)file.o $(PATHO)weapons.o $(PATHO)unity.o
+	$(LINK) $(SANITIZE) -o $@ $^
+
+# Weapons testing file depends on const file.
+$(PATHB)Test_weapons.out: $(PATHO)Test_weapons.o $(PATHO)const.o $(PATHO)weapons.o $(PATHO)unity.o
 	$(LINK) $(SANITIZE) -o $@ $^
 
 $(PATHB)Test_%.out: $(PATHO)Test_%.o $(PATHO)%.o $(PATHO)unity.o

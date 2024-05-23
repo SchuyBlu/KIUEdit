@@ -682,5 +682,40 @@ const float MOD_VALUES[] = {
 	-6.6	
 };
 
+
+const float RANGED_VALUES[] = {
+	0.0,
+	14.9,
+	23.2,
+	31.5,
+	39.8,
+	48.1,
+	56.4,
+	64.7,
+	73.0,
+	81.3,
+	89.6,
+	98.2,
+	106.2
+};
+
+
+const float MELEE_VALUES[] = {
+	0.0,
+	9.4,
+	15.2,
+	21.0,
+	26.8,
+	32.6,
+	38.4,
+	44.2,
+	50.0,
+	55.8,
+	61.6,
+	67.4,
+	73.2
+};
+
+
 // ONLY NEEDED FOR TESTING PURPOSES
 const size_t mod_values_len = sizeof(MOD_VALUES) / sizeof(MOD_VALUES[0]);
