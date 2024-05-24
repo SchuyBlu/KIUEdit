@@ -17,9 +17,27 @@
 #include <assert.h> 
 #include <stdint.h> 
 #include <stdbool.h>
-#include "offsets.h"
 #include "weapons.h"
 #include "const.h"
+
+
+/*
+ * Collection of values that are found in the save file.
+ * `HEART_OFFSET` - Heart location.
+ * `PALU_OFFSET` - Palutena offering location.
+ * `VIRIDI_OFFSET` - Viridi offering location.
+ * `WEAPAON_OFFSET` - Location of first weapon slot.
+ * `NEXT_WEAPON` - Location of next weapon.
+ * `WEP_MASK` - Mask that will leave only weapon timestamp data intact.
+ */
+typedef enum {
+	HEART_OFFSET = 0x1e8,
+	PALU_OFFSET = 0x1ec,
+	VIRIDI_OFFSET = 0x1f0,
+	WEAPON_OFFSET = 0x670,
+	NEXT_WEAPON = 0x20,
+	WEP_MASK = 0xf843
+} D_OFFSET;
 
 
 /*

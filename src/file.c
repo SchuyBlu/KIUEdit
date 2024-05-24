@@ -91,7 +91,7 @@ bool check_if_weapon_present(SaveFile *save, uint32_t offset)
 {
 	uint32_t result = 0;
 
-	fseek(save->fp, offset + 0x5, SEEK_SET);
+	fseek(save->fp, offset + 5, SEEK_SET);
 	fread(&result, 2, 1, save->fp);
 
 	return result != 0;
@@ -107,7 +107,7 @@ void populate_name_data(Weapon *weapon, uint32_t data)
 	cid = (data >> 2) & 0x0f;
 
 	// Populate data related to name, ids, and timestamp metadata into weapon.
-	weapon->metadata = data & 0xf843; // mask for data not including cid and wid.
+	weapon->metadata = data & WEP_MASK; // mask for data not including cid and wid.
 	weapon->ids = (cid << 4) | wid;
 	weapon->name = map_to_weapon(cid, wid);
 }
@@ -209,7 +209,7 @@ void populate_savefile_weapons(SaveFile *save, uint32_t offset)
 
 		save->weapons.array[save->weapons.len] = fetch_savefile_weapon(save, offset);
 		save->weapons.len++;
-		offset += 0x20;
+		offset += NEXT_WEAPON;
 		count++;
 	}
 }
