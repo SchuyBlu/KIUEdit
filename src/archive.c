@@ -28,28 +28,29 @@ void archive_close(const char *name)
 }
 
 
-String2D directory_strings(const char *name)
+char **directory_strings(const char *name)
 {
 	DIR *dir = NULL;
 	struct dirent *entry = NULL;
-	String2D strings = { NULL, 0, 1 };
+	char **list;
+	int cap = 1, len = 0;
 
-	strings.list = malloc(sizeof(char) * strings.len);
-	assert(strings.list);
+	list = malloc(sizeof(char) * cap);
+	assert(list);
 
 	dir = opendir("KIU:/");
 	while ((entry = readdir(dir)) != NULL) {
-		if (strings.len == strings.cap) {
-			strings.cap *= 2;
-			strings.list = realloc(strings.list, sizeof(char) * strings.cap);
-			assert(strings.list);
+		if (len == cap) {
+			cap *= 2;
+			list = realloc(list, sizeof(char) * cap);
+			assert(list);
 		}
-		strings.list[strings.len] = strdup(entry->d_name);
-		assert(strings.list[strings.len]);
-		strings.len++;
+		list[len] = strdup(entry->d_name);
+		assert(list[len]);
+		len++;
 	}
 	closedir(dir);
 
-	return strings;
+	return list;
 }
 

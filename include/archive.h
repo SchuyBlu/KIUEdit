@@ -9,7 +9,6 @@
 #include <dirent.h>
 #include <assert.h>
 #include <3ds.h>
-#include "types.h"
 
 
 /*
@@ -37,5 +36,5 @@ void archive_close(const char *name);
  * Gets a list of strings representing the directory listings.
  * `name` - Name of archive the directory is within.
  */
-String2D directory_strings(char const *name);
+char **directory_strings(char const *name);
 
