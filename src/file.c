@@ -1,6 +1,5 @@
 #include "file.h"
 
-
 void savefile_init(SaveFile *save, char *path)
 {
 	save->fp = NULL;
@@ -10,6 +9,7 @@ void savefile_init(SaveFile *save, char *path)
 	assert(save->fp);
 
 	fetch_savefile_hearts(save);
+	populate_savefile_weapons(save, 0x670);
 }
 
 

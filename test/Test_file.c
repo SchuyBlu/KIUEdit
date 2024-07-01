@@ -236,7 +236,7 @@ void test_givenFirstBladeAndSixStars_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)first_blade->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)first_blade->melee / 2);
 
-	destroy_savefile(&tsave);
+	fclose(tsave.fp);
 	destroy_weapon(first_blade);
 }
 
@@ -260,7 +260,7 @@ void test_givenGaolBladeAndBothSixStars_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(6.0, (float)gaol_blade->melee / 2);
 
-	destroy_savefile(&tsave);
+	fclose(tsave.fp);
 	destroy_weapon(gaol_blade);
 }
 
@@ -284,7 +284,7 @@ void test_givenDrillArmAndOnlyFourHalvesMelee_should_containCorrectInfo(void)
 	TEST_ASSERT_EQUAL_FLOAT(0.0, (float)drill_arm->ranged / 2);
 	TEST_ASSERT_EQUAL_FLOAT(4.5, (float)drill_arm->melee / 2);
 
-	destroy_savefile(&tsave);
+	fclose(tsave.fp);
 	destroy_weapon(drill_arm);
 }
 
@@ -333,7 +333,7 @@ void test_givenCookieCutterDrillArm_should_mapToCorrectMods(void)
 	TEST_ASSERT_EQUAL_STRING("Effect Duration +4", drill_arm->mod5);
 	TEST_ASSERT_EQUAL_STRING("Overall Defense -4", drill_arm->mod6);
 
-	destroy_savefile(&tsave);
+	fclose(tsave.fp);
 	destroy_weapon(drill_arm);
 }
 

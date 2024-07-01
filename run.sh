@@ -55,6 +55,7 @@ kill_container_if_exists() {
 	if [ -n "$( docker ps | grep $CONTAINER_NAME )" ]; then
 		docker kill $CONTAINER_NAME > /dev/null
 		docker container rm $CONTAINER_NAME > /dev/null
+		docker container prune > /dev/null
 	fi
 }
 
