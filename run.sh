@@ -45,7 +45,7 @@ build_image() {
 }
 
 check_if_exists() {
-	val=$( docker images | grep "${IMAGE_NAME}" )
+	val=$( docker images | grep "$IMAGE_NAME" )
 	if [ -z "${val}" ]; then
 		build_image
 	fi
@@ -53,9 +53,9 @@ check_if_exists() {
 
 kill_container_if_exists() {
 	if [ -n "$( docker ps | grep $CONTAINER_NAME )" ]; then
-		docker kill $CONTAINER_NAME > /dev/null
-		docker container rm $CONTAINER_NAME > /dev/null
-		docker container prune > /dev/null
+		unmount_container
+		docker kill "$CONTAINER_NAME" > /dev/null
+		docker container rm "$CONTAINER_NAME" > /dev/null
 	fi
 }
 
@@ -65,10 +65,10 @@ mount_container() {
 	kill_container_if_exists
 
 	# Run and retrieve IP address.
-	docker run --name ${CONTAINER_NAME} -dt ${IMAGE_NAME}
+	docker run --name "$CONTAINER_NAME" -dt "$IMAGE_NAME"
 
 	# If the ip with key hasn't been registered, do so now
-	cip=$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' ${CONTAINER_NAME} )
+	cip=$( docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' "$CONTAINER_NAME" )
 
 	if [ -z "$( cat ~/.ssh/known_hosts | grep ${cip} )" ]; then
 		ssh-copy-id -i ./keys/id_rsa_shared user@${cip}
