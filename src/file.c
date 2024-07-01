@@ -9,7 +9,8 @@ void savefile_init(SaveFile *save, char *path)
 	assert(save->fp);
 
 	fetch_savefile_hearts(save);
-	populate_savefile_weapons(save, 0x670);
+	populate_savefile_weapons(save, WEAPON_OFFSET);
+	fclose(save->fp);
 }
 
 

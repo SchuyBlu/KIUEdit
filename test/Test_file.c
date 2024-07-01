@@ -8,12 +8,21 @@ SaveFile save;
 void setUp()
 {
 	savefile_init(&save, "test/input/in.sav");
+
+	// NOTE: This is required because savefile_init closes the save after
+	//       parsing and reading in all data, to avoid having a file handle
+	//       open while data is being modified. This needs to be reopened,
+	//       as the save is required for testing internal components of the
+	//       module.
+	save.fp = fopen("test/input/in.sav", "r+");
+	assert(save.fp);
 }
 
 
 void tearDown()
 {
 	destroy_savefile(&save);
+	fclose(save.fp);
 }
 
 
