@@ -27,30 +27,3 @@ void archive_close(const char *name)
 	archiveUnmount(name);
 }
 
-
-char **directory_strings(const char *name)
-{
-	DIR *dir = NULL;
-	struct dirent *entry = NULL;
-	char **list;
-	int cap = 1, len = 0;
-
-	list = malloc(sizeof(char) * cap);
-	assert(list);
-
-	dir = opendir("KIU:/");
-	while ((entry = readdir(dir)) != NULL) {
-		if (len == cap) {
-			cap *= 2;
-			list = realloc(list, sizeof(char) * cap);
-			assert(list);
-		}
-		list[len] = strdup(entry->d_name);
-		assert(list[len]);
-		len++;
-	}
-	closedir(dir);
-
-	return list;
-}
-

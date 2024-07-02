@@ -5,7 +5,7 @@
 SaveFile save;
 
 
-void setUp()
+void setUp(void)
 {
 	savefile_init(&save, "test/input/in.sav");
 
@@ -19,7 +19,7 @@ void setUp()
 }
 
 
-void tearDown()
+void tearDown(void)
 {
 	destroy_savefile(&save);
 	fclose(save.fp);

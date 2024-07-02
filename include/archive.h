@@ -36,5 +36,5 @@ void archive_close(const char *name);
  * Gets a list of strings representing the directory listings.
  * `name` - Name of archive the directory is within.
  */
-char **directory_strings(char const *name);
+char **directory_strings(const char *name, const char *dir_path);
 

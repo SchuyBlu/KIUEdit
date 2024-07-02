@@ -1,3 +1,5 @@
+// NOTE: Please note that the menu itself must be tested manually once build to assure
+// all the pieces are assembled in the correct order.
 #include "menu.h"
 #include "unity.h"
 

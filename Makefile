@@ -52,12 +52,36 @@ $(PATHR)%.txt: $(PATHB)%.out
 	-./$< > $@ 2>&1
 
 # Define Test output rules for executables that have more than one dependency.
-$(PATHB)Test_file.out: $(PATHO)Test_file.o $(PATHO)const.o $(PATHO)file.o $(PATHO)weapons.o $(PATHO)unity.o
+# =============================================================================
+
+TEST_FILE_DEPS := $(PATHO)Test_file.o
+TEST_FILE_DEPS += $(PATHO)const.o 
+TEST_FILE_DEPS += $(PATHO)file.o 
+TEST_FILE_DEPS += $(PATHO)weapons.o
+TEST_FILE_DEPS += $(PATHO)unity.o
+$(PATHB)Test_file.out: $(TEST_FILE_DEPS)
 	$(LINK) $(SANITIZE) -o $@ $^
 
 # Weapons testing file depends on const file.
-$(PATHB)Test_weapons.out: $(PATHO)Test_weapons.o $(PATHO)const.o $(PATHO)weapons.o $(PATHO)unity.o
+TEST_WEAPON_DEPS := $(PATHO)Test_weapons.o
+TEST_WEAPON_DEPS += $(PATHO)const.o 
+TEST_WEAPON_DEPS += $(PATHO)weapons.o
+TEST_WEAPON_DEPS += $(PATHO)unity.o
+$(PATHB)Test_weapons.out: $(TEST_WEAPON_DEPS)
 	$(LINK) $(SANITIZE) -o $@ $^
+
+# Menu builder testing file depends on const, weapons, file, and menu.
+TEST_MENUB_DEPS := $(PATHO)Test_menub.o
+TEST_MENUB_DEPS += $(PATHO)menub.o
+TEST_MENUB_DEPS += $(PATHO)const.o 
+TEST_MENUB_DEPS += $(PATHO)weapons.o
+TEST_MENUB_DEPS += $(PATHO)file.o 
+TEST_MENUB_DEPS += $(PATHO)menu.o
+TEST_MENUB_DEPS += $(PATHO)unity.o
+$(PATHB)Test_menub.out: $(TEST_MENUB_DEPS)
+	$(LINK) $(SANITIZE) -o $@ $^
+
+# =============================================================================
 
 $(PATHB)Test_%.out: $(PATHO)Test_%.o $(PATHO)%.o $(PATHO)unity.o
 	$(LINK) $(SANITIZE) -o $@ $^
