@@ -42,6 +42,20 @@ void test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectFilenames(voi
 	free(list);
 }
 
+
+void test_whenDirectoryIsLoadedWithOneFile_should_containCorrectLenAndName(void)
+{
+	int len = 0;
+	char **list = get_save_strings("test/test_dirs/test_one", &len);
+
+	TEST_ASSERT_EQUAL_INT(1, len);
+	TEST_ASSERT_EQUAL_STRING("01.SAV", list[0]);
+
+	for (int i = 0; i < len; i++)
+		free(list[i]);
+	free(list);
+}
+
 int main(void)
 {
 	UNITY_BEGIN();

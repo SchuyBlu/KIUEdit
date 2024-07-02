@@ -31,14 +31,10 @@ The output to the terminal will only show failed tests and any output from the a
 
 ## Todo
 The following features currently are incomplete:
-- Refactor unsafe function use to handle errors.
-- Read weapon data in save (50%).
-- Test arrays.h, archive.h.
 - Add ability to modify data on 3DS.
-- Translate byte values to associated strings.
+- Dynamically create submenu tree when entering savefile.
 
 The following are features that will potentially be added, but are not a priority:
-- Display weapon value.
 - Add new weapons.
 - Modify data shown in the vault.
 - A simple GUI.
