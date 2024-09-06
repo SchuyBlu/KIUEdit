@@ -1,16 +1,18 @@
 #include "editor.h"
 #include "unity.h"
 
+Menu menu;
 
 void setUp()
 {
-	return;
+	menu_init(&menu, "Testing Menu", switch_submenu);
+	set_submenu_desc(menu.curr, "This is a menu!");
 }
 
 
 void tearDown()
 {
-	return;
+	destroy_menu(&menu);
 }
 
 
@@ -58,11 +60,7 @@ void test_whenDirectoryIsLoadedWithOneFile_should_containCorrectLenAndName(void)
 
 void test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames(void)
 {
-	Menu menu;
 	SaveFile tsave;
-
-	menu_init(&menu, "Weapon Menu", switch_submenu);
-	set_submenu_desc(menu.curr, "List of weapons.");
 
 	tsave.fp = NULL;
 	tsave.weapons.array = NULL;
@@ -74,6 +72,7 @@ void test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames(void)
 		fprintf(stderr, "Error opening max weapons file.\n");
 		return;
 	}
+
 
 	populate_savefile_weapons(&tsave, 0x0);
 
@@ -88,7 +87,6 @@ void test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames(void)
 	TEST_ASSERT_EQUAL_STRING("Jetstream Orbitars", menu.curr->options[5]->desc);
 	TEST_ASSERT_EQUAL_STRING("Thanatos Staff", menu.curr->options[6]->desc);
 
-	destroy_menu(&menu);
 	destroy_savefile(&tsave);
 }
 

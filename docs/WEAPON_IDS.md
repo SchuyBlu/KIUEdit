@@ -1,6 +1,6 @@
-# Weapons
+# Weapon Names
 
-This page will cover how the game stores each weapon in a save file. There are a few things to note to get started:
+This page will cover how the game stores each weapon IDs in a save file. There are a few things to note to get started.
 
 - Weapons are stored linearly from offset `0x670`.
 - Weapons are stored in sections of 32 bytes, though most is empty space.
