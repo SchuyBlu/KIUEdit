@@ -103,6 +103,13 @@ void set_submenu_desc(Submenu *submenu, char *desc);
 
 
 /*
+ * Returns the submenu description.
+ * `submenu` - pointer to submenu being accessed.
+ */
+char *get_submenu_desc(Submenu *submenu);
+
+
+/*
  * Adds an option to the submenu being specified.
  * `submenu` - pointer to submenu being modified.
  * `desc` - description for new submenu.

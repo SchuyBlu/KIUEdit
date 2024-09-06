@@ -76,6 +76,12 @@ void set_submenu_desc(Submenu *submenu, char *desc)
 }
 
 
+char *get_submenu_desc(Submenu *submenu)
+{
+	return submenu->desc;
+}
+
+
 Submenu *add_submenu_option(Submenu *submenu, char *desc, event action)
 {
 	Submenu *new_submenu;

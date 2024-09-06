@@ -33,6 +33,16 @@ void test_givenNewDescriptionAdded_should_correctlyChangeDescription(void)
 }
 
 
+void test_givenGetDescription_should_correctlyReturnDescription(void)
+{
+	char *received;
+
+	set_submenu_desc(menu.curr, "Example of submenu description.");
+	received = get_submenu_desc(menu.curr);
+	TEST_ASSERT_EQUAL_STRING("Example of submenu description.", received);
+}
+
+
 void test_givenAThirdLevelPage_should_beConstructedCorrectly(void)
 {
 	// This test also exists to see whether or not memory for submenus
@@ -277,6 +287,7 @@ int main(void)
 	UNITY_BEGIN();
 	RUN_TEST(test_givenMenuIsInitialized_should_displayCorrectTitle);
 	RUN_TEST(test_givenNewDescriptionAdded_should_correctlyChangeDescription);
+	RUN_TEST(test_givenGetDescription_should_correctlyReturnDescription);
 	RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
 	RUN_TEST(test_givenThreeSubmenusWithTwoLevelsEach_should_correctContainAllInformation);
 	RUN_TEST(test_givenSubmenuIsChanged_then_newCurrentShouldBeUpdated);
