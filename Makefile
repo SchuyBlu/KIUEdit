@@ -71,14 +71,14 @@ $(PATHB)Test_weapons.out: $(TEST_WEAPON_DEPS)
 	$(LINK) $(SANITIZE) -o $@ $^
 
 # Menu builder testing file depends on const, weapons, file, and menu.
-TEST_MENUB_DEPS := $(PATHO)Test_menub.o
-TEST_MENUB_DEPS += $(PATHO)menub.o
-TEST_MENUB_DEPS += $(PATHO)const.o 
-TEST_MENUB_DEPS += $(PATHO)weapons.o
-TEST_MENUB_DEPS += $(PATHO)file.o 
-TEST_MENUB_DEPS += $(PATHO)menu.o
-TEST_MENUB_DEPS += $(PATHO)unity.o
-$(PATHB)Test_menub.out: $(TEST_MENUB_DEPS)
+TEST_EDITOR_DEPS := $(PATHO)Test_editor.o
+TEST_EDITOR_DEPS += $(PATHO)editor.o
+TEST_EDITOR_DEPS += $(PATHO)const.o 
+TEST_EDITOR_DEPS += $(PATHO)weapons.o
+TEST_EDITOR_DEPS += $(PATHO)file.o 
+TEST_EDITOR_DEPS += $(PATHO)menu.o
+TEST_EDITOR_DEPS += $(PATHO)unity.o
+$(PATHB)Test_editor.out: $(TEST_EDITOR_DEPS)
 	$(LINK) $(SANITIZE) -o $@ $^
 
 # =============================================================================
