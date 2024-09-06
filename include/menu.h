@@ -67,7 +67,7 @@ typedef struct Menu {
  * `desc` - page description.
  * `action` - Pointer to an Action function.
  */
-void submenu_init(Submenu *submenu, char *desc, event action);
+void submenu_init(Submenu *submenu, const char *desc, event action);
 
 
 /*
@@ -116,7 +116,7 @@ char *get_submenu_desc(Submenu *submenu);
  * `action` - function defining the action for the submenu.
  * Returns a pointer to the new submenu.
  */
-Submenu *add_submenu_option(Submenu *submenu, char *desc, event action);
+Submenu *add_submenu_option(Submenu *submenu, const char *desc, event action);
 
 
 /*

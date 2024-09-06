@@ -1,7 +1,7 @@
 #include "menu.h"
 
 
-void submenu_init(Submenu *submenu, char *desc, event action)
+void submenu_init(Submenu *submenu, const char *desc, event action)
 {
 	if (!desc) {
 		submenu->desc = NULL;
@@ -82,7 +82,7 @@ char *get_submenu_desc(Submenu *submenu)
 }
 
 
-Submenu *add_submenu_option(Submenu *submenu, char *desc, event action)
+Submenu *add_submenu_option(Submenu *submenu, const char *desc, event action)
 {
 	Submenu *new_submenu;
 
