@@ -20,7 +20,7 @@ RESULTS=$(patsubst $(PATHT)Test_%.c,$(PATHR)Test_%.txt,$(TSRC))
 COMPILE=gcc -c -g
 LINK=gcc -g
 LIBLINK=-l json-c
-DEFINES=-D TEST_BUILD
+DEFINES=#-D TEST_BUILD
 CFLAGS=-I. -I$(PATHI) -I$(PATHU)
 SANITIZE=-fsanitize=address
 

@@ -17,12 +17,17 @@
  * Contains miscellaneous data required for the editor to run the menu.
  * `save` - Save file containing KIU save data.
  * `save_loaded` - boolean to determine wether or not the save has loaded.
- * `key_down` - Contains last key press.
+ * `key_down` - Contains current key press.
+ * `key_down_old` - Contains previous key press.
+ * `files` - contains a list of files on the save.
+ * `files_len` - length of files.
+ * `file_index` - index of current file.
  */
 typedef struct MenuContext {
     SaveFile save;
     bool save_loaded;
     uint32_t key_down;
+    uint32_t key_down_old;
     char **files;
     uint32_t files_len;
     uint32_t file_index;
@@ -45,7 +50,7 @@ typedef struct Editor {
 /*
  * Initializes the save for kid icarus uprising, and returns an editor.
  */
-Editor save_menu_init(void);
+Editor editor_init(void);
 
 
 /*
@@ -59,7 +64,7 @@ int comp_string(const void *string1, const void *string2);
  * `name` - directory path to be opened.
  * `len` - Will contain the length of the array after return.
  */
-char **get_save_strings(const char *dir_path, int *len);
+char **get_save_strings(const char *dir_path, uint32_t *len);
 
 
 /*
@@ -68,6 +73,15 @@ char **get_save_strings(const char *dir_path, int *len);
  * `save` - save file being read from.
  */
 void build_weapon_menus(Submenu *submenu, SaveFile save);
+
+
+// TODO: Don't want to have duplicate code, however nature of modularity
+// requires it here. Rewrite if you think of a better solution.
+/*
+ * Same as switch_submenu from menu.h, however, it takes a context
+ * pointer instead of a uint32_t pointer.
+ */
+void editor_switch_submenu(void *menu_ptr, void *context_ptr);
 
 
 /*
