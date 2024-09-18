@@ -32,7 +32,6 @@ The output to the terminal will only show failed tests and any output from the a
 ## Todo
 The following features currently are incomplete:
 - Add ability to modify data on 3DS.
-- Dynamically create submenu tree when entering savefile.
 
 The following are features that will potentially be added, but are not a priority:
 - Add new weapons.
