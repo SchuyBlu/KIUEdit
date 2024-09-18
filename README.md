@@ -36,4 +36,3 @@ The following features currently are incomplete:
 The following are features that will potentially be added, but are not a priority:
 - Add new weapons.
 - Modify data shown in the vault.
-- A simple GUI.
