@@ -146,6 +146,7 @@ void switch_submenu(void *menu_ptr, void *k_down_ptr)
 		return;
 	}
 
+	// Comment for testing
 	if (k_down & BIT(0) && menu->curr->len > 0) {
 		menu->curr = menu->curr->options[menu->curr->selected];
 	}
@@ -169,4 +170,3 @@ void move_menu_cursor(Menu *menu, uint32_t k_down)
 		}
 	}
 }
-
