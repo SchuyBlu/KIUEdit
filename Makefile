@@ -27,6 +27,7 @@ SANITIZE=-fsanitize=address
 # Define phony so make doesn't attempt to build
 .PHONY: test
 .PHONY: clean
+.PHONY: release
 
 # Define precious files, as Unity clears temporary files when executable runs
 .PRECIOUS: $(PATHB)Test_%.out
@@ -79,7 +80,7 @@ TEST_EDITOR_DEPS += $(PATHO)file.o
 TEST_EDITOR_DEPS += $(PATHO)menu.o
 TEST_EDITOR_DEPS += $(PATHO)unity.o
 $(PATHB)Test_editor.out: $(TEST_EDITOR_DEPS)
-	$(LINK) $(SANITIZE) -o $@ $^
+	$(LINK) $(SANITIZE) $(DEFINES) -o $@ $^
 
 # =============================================================================
 

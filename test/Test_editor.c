@@ -18,7 +18,7 @@ void tearDown()
 
 void test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectLength(void)
 {
-	int len = 0;
+	uint32_t len = 0;
 	char **list = get_save_strings("test/test_dirs/test_all", &len);
 
 	TEST_ASSERT_EQUAL_INT(4, len);
@@ -31,13 +31,13 @@ void test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectLength(void)
 
 void test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectFilenames(void)
 {
-	int len = 0;
+	uint32_t len = 0;
 	char **list = get_save_strings("test/test_dirs/test_all", &len);
 	
-	TEST_ASSERT_EQUAL_STRING("00.SAV", list[0]);
-	TEST_ASSERT_EQUAL_STRING("01.SAV", list[1]);
-	TEST_ASSERT_EQUAL_STRING("02.SAV", list[2]);
-	TEST_ASSERT_EQUAL_STRING("03.SAV", list[3]);
+	TEST_ASSERT_EQUAL_STRING("KIU:/00.SAV", list[0]);
+	TEST_ASSERT_EQUAL_STRING("KIU:/01.SAV", list[1]);
+	TEST_ASSERT_EQUAL_STRING("KIU:/02.SAV", list[2]);
+	TEST_ASSERT_EQUAL_STRING("KIU:/03.SAV", list[3]);
 
 	for (int i = 0; i < len; i++)
 		free(list[i]);
@@ -47,7 +47,7 @@ void test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectFilenames(voi
 
 void test_whenDirectoryIsLoadedWithOneFile_should_containCorrectLenAndName(void)
 {
-	int len = 0;
+	uint32_t len = 0;
 	char **list = get_save_strings("test/test_dirs/test_one", &len);
 
 	TEST_ASSERT_EQUAL_INT(1, len);
@@ -90,12 +90,22 @@ void test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames(void)
 	destroy_savefile(&tsave);
 }
 
+void test_editorInitCorrectly_should_correctlyLoadWeapons(void)
+{
+	Editor editor;
+
+	editor_init(&editor);
+	destroy_editor(&editor);
+}
+
+
 int main(void)
 {
 	UNITY_BEGIN();
 	RUN_TEST(test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectLength);
 	RUN_TEST(test_whenDirectoryIsLoadedWithThreeFiles_should_containCorrectFilenames);
 	RUN_TEST(test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames);
+	RUN_TEST(test_editorInitCorrectly_should_correctlyLoadWeapons);
 	UNITY_END();
 }
 

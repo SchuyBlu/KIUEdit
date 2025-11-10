@@ -49,8 +49,15 @@ typedef struct Editor {
 
 /*
  * Initializes the save for kid icarus uprising, and returns an editor.
+ * `editor` - Editor being initialized. Must not be allocated for.
  */
-Editor editor_init(void);
+void editor_init(Editor *editor);
+
+/*
+ * Destroys a menu and its contents.
+ * `editor` - Editor being destroyed.
+ */
+void destroy_editor(Editor *editor);
 
 
 /*

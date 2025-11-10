@@ -5,7 +5,7 @@ void savefile_init(SaveFile *save, char *path)
 	save->fp = NULL;
 	save->weapons = (Weapons){ NULL, 0, 1 };
 
-	save->fp = fopen(path, "r+");
+	save->fp = fopen(path, "r");
 	assert(save->fp);
 
 	fetch_savefile_hearts(save);

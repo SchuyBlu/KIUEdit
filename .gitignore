@@ -5,12 +5,14 @@
 build
 
 # Vim related files
-*.json
 compile_flags.txt
 
 # VSCode stuff
 .vscode
 .github/*
+
+# Zed stuff
+.zed
 
 # Ignore testing module and files
 unity

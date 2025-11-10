@@ -6,7 +6,7 @@ void archive_handle_errors(Result res, const char *name)
 	if (!R_SUCCEEDED(res)) {
 		printf("Failed to mount %s.\n", name);
 		archiveUnmount(name);
-		sleep(5);
+		sleep(20);
 		gfxExit();
 	}
 }

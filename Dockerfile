@@ -15,7 +15,7 @@ RUN apt-get update && apt-get upgrade -y && \
 	dpkg-reconfigure --frontend=noninteractive locales && \
 	update-locale LANG=en_US.UTF-8 && \
 	apt-get clean && \
-	rm -rf /var/lib/apt/lists*
+	rm -rf /var/lib/apt/lists/*
 
 RUN ln -s /proc/mounts /etc/mtab && \
 	wget https://apt.devkitpro.org/install-devkitpro-pacman && \
@@ -26,13 +26,12 @@ RUN ln -s /proc/mounts /etc/mtab && \
 	yes | dkp-pacman -Scc
 
 # Install project specific dependencies
-RUN apt-get install -y gcc libjson-c-dev && \
+RUN apt-get update && apt-get install -y gcc libjson-c-dev && \
 	yes | dkp-pacman -S 3ds-libjson-c
 
 # Install ssh server dependencies
-RUN apt-get install -y openssh-server
-
-RUN sed -i 's/PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+RUN apt-get install -y openssh-server openssh-sftp-server && \
+	mkdir -p /var/run/sshd && ssh-keygen -A
 
 # Set up basic user.
 RUN useradd -m -s /bin/bash user && \
@@ -40,12 +39,12 @@ RUN useradd -m -s /bin/bash user && \
 
 RUN mkdir -p /home/user/.ssh
 
-COPY keys/id_rsa_shared /home/user/.ssh/id_rsa
-
+COPY keys/id_rsa_shared.pub /home/user/.ssh/authorized_keys
 RUN chown -R user:user /home/user/.ssh && \
-	echo "Host docker\n\tStrictHostKeyChecking no\n" >> /home/user/.ssh/config
+    chmod 700 /home/user/.ssh && \
+    chmod 600 /home/user/.ssh/authorized_keys
 
-ENV LANG en_US.UTF-8
+ENV LANG=en_US.UTF-8
 
 ENV DEVKITPRO="/opt/devkitpro"
 ENV DEVKITARM="/opt/devkitpro/devkitARM"
@@ -54,5 +53,5 @@ ENV PATH=${DEVKITPRO}/tools/bin:$PATH
 
 # Setup port and entrypoint for ssh service
 EXPOSE 22
-ENTRYPOINT service ssh start && bash
+CMD ["/usr/sbin/sshd","-D"]
 

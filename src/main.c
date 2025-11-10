@@ -9,7 +9,9 @@
 int main(void)
 {
 	archive_open("KIU");
-	Editor editor = editor_init();
+	Editor editor;
+
+	editor_init(&editor);
 
 	gfxInitDefault();
 	consoleInit(GFX_TOP, NULL);
@@ -23,13 +25,13 @@ int main(void)
 
 		if (editor.ctx.key_down & KEY_START) break;
 
+		move_menu_cursor(&editor.menu, editor.ctx.key_down);
+		editor.menu.curr->action(&editor.menu, &editor.ctx);
+
 		if (editor.ctx.key_down != editor.ctx.key_down_old) {
 			consoleClear();
 			print_menu(&editor.menu, NULL);
 		}
-
-		move_menu_cursor(&editor.menu, editor.ctx.key_down);
-		editor.menu.curr->action(&editor.menu, &editor.ctx);
 
 		editor.ctx.key_down_old = editor.ctx.key_down;
 
@@ -38,8 +40,8 @@ int main(void)
 		gspWaitForVBlank();
 	}
 
+	destroy_editor(&editor);
 	archive_close("KIU");
-	destroy_menu(&editor.menu);
 
 	gfxExit();
 
