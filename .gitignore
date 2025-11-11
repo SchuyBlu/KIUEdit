@@ -14,6 +14,9 @@ compile_flags.txt
 # Zed stuff
 .zed
 
+# idea stuff
+.idea
+
 # Ignore testing module and files
 unity
 *.bin
@@ -23,3 +26,6 @@ unity
 
 # Docker container keys
 keys
+
+# Save files
+*.sav
