@@ -58,7 +58,8 @@ char **get_save_strings(const char *dir_path, uint32_t *len)
 	dir = opendir(dir_path);
 	while ((entry = readdir(dir)) != NULL) {
 		if (strcmp(".", entry->d_name) == 0 ||
-			strcmp("..", entry->d_name) == 0)
+			strcmp("..", entry->d_name) == 0 ||
+			strcmp("00.SAV", entry->d_name) == 0)
 			continue;
 
 		if (*len == cap) {
@@ -111,6 +112,8 @@ void editor_switch_submenu(void *menu_ptr, void *context_ptr)
 
     if ((k_down & BIT(1)) && menu->curr->prev) {  // B = back
         menu->curr = menu->curr->prev;
+		menu->curr->view_top = 0;
+		menu->curr->selected = 0;
         return;
     }
 
@@ -119,6 +122,8 @@ void editor_switch_submenu(void *menu_ptr, void *context_ptr)
 
         // switch page immediately so print shows the new page this frame
         menu->curr = next;
+		menu->curr->view_top = 0;
+		menu->curr->selected = 0;
 
         // if this child has its own action (e.g., load_save), run it now
         if (next->action && next->action != editor_switch_submenu) {
@@ -156,6 +161,7 @@ void load_save(void *menu_ptr, void *context_ptr)
 		old->cap = 1;
 		old->selected = 0;
 		old->dealloc_idx = 0;
+		old->view_top = 0;
 		old->options = NULL;
 		old->action = load_save;
 

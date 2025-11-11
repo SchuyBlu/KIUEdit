@@ -9,6 +9,7 @@
 #include <string.h>
 #include <assert.h>
 #define BIT(n) (1U<<(n))
+#define VISIBLE_ROWS 25
 
 
 /*
@@ -40,6 +41,7 @@ typedef struct Submenu {
 	uint32_t len;
 	uint32_t cap;
 	uint32_t selected;
+	uint32_t view_top;
 	struct Submenu *prev;
 	struct Submenu **options;
 	event action;
