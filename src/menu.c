@@ -109,34 +109,6 @@ Submenu *add_submenu_option(Submenu *submenu, const char *desc, event action)
 }
 
 
-/*
-void print_menu(struct Menu *menu, Submenu *submenu)
-{
-	Submenu *submenu_to_print;
-
-	// Handle whether or not page is NULL.
-	if (!submenu) {
-		submenu_to_print = menu->curr;
-	} else {
-		submenu_to_print = submenu;
-	}
-
-	printf("%s\n", menu->title);
-	for (int i = 0; i < strlen(menu->title); i++) {
-		putchar('_');
-	}
-	printf("\n\n");
-
-	printf("%s\n", submenu_to_print->desc);
-	for (int i = 0; i < submenu_to_print->len; i++) {
-		if (i == submenu_to_print->selected) {
-			printf("> %s\n", submenu_to_print->options[i]->desc);
-		} else {
-			printf("  %s\n", submenu_to_print->options[i]->desc);
-		}
-	}
-}
-*/
 void print_menu(struct Menu *menu, Submenu *submenu)
 {
     Submenu *page = NULL;
@@ -191,38 +163,28 @@ void switch_submenu(void *menu_ptr, void *k_down_ptr)
 }
 
 
-/*
-void move_menu_cursor(Menu *menu, uint32_t k_down)
+void kill_children_reset_page(Submenu *reset, event action)
 {
-    Submenu *page = menu->curr;
-    if (!page || page->len == 0) return;
+	// Destroy old page
+	for (int i = 0; i < reset->len; i++) {
+		_destroy_menu(reset->options[i]);
+		reset->options[i] = NULL;
+	}
 
-    // DOWN
-    if (k_down & BIT(7)) {
-        // wrap-around increment (safe because len > 0)
-        page->selected = (page->selected + 1) % page->len;
+	// Free the list of options on the old page
+	free(reset->options);
+	reset->options = NULL;
 
-        // If cursor fell below the window, scroll down
-        if (page->selected >= page->view_top + VISIBLE_ROWS) {
-            page->view_top = page->selected - (VISIBLE_ROWS - 1);
-        }
-    }
-
-    // UP
-    if (k_down & BIT(6)) {
-        if (page->selected == 0) {
-			page->selected = page->len - 1;
-		} else {
-			;page->selected--;
-		}
-
-        // If cursor moved above the window, scroll up
-        if (page->selected < page->view_top) {
-            page->view_top = page->selected;
-        }
-    }
+	// Reset the structure of the old page
+	reset->len = 0;
+	reset->cap = 1;
+	reset->selected = 0;
+	reset->dealloc_idx = 0;
+	reset->view_top = 0;
+	reset->options = NULL;
+	reset->action = action;
 }
-*/
+
 
 void move_menu_cursor(Menu *menu, uint32_t k_down)
 {

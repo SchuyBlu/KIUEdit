@@ -68,11 +68,17 @@ char **get_save_strings(const char *dir_path, uint32_t *len)
 			assert(list);
 		}
 
-		filename = malloc(sizeof(char) * (strlen("KIU:/") + strlen(entry->d_name) + 1));
+		// Necessary for testing.
+#ifndef TEST_BUILD
+		filename = malloc(sizeof(char) * (strlen(dir_path) + strlen(entry->d_name) + 1));
 		assert(filename);
-
-		strcpy(filename, "KIU:/");
+		strcpy(filename, dir_path);
 		strcat(filename, entry->d_name);
+#else
+		filename = malloc(sizeof(char) * (strlen(entry->d_name) + 1));
+		strcpy(filename, entry->d_name);
+		assert(filename);
+#endif
 
 		list[*len] = strdup(filename);
 		assert(list[*len]);
@@ -146,24 +152,7 @@ void load_save(void *menu_ptr, void *context_ptr)
 		destroy_savefile(&context->save);
 		old = save_page->options[context->file_index];
 
-		// Destroy old page
-		for (int i = 0; i < old->len; i++) {
-			_destroy_menu(old->options[i]);
-			old->options[i] = NULL;
-		}
-
-		// Free the list of options on the old page
-		free(old->options);
-		old->options = NULL;
-
-		// Reset the structure of the old page
-		old->len = 0;
-		old->cap = 1;
-		old->selected = 0;
-		old->dealloc_idx = 0;
-		old->view_top = 0;
-		old->options = NULL;
-		old->action = load_save;
+		kill_children_reset_page(old, load_save);
 
 		context->save_loaded = false;
 	}

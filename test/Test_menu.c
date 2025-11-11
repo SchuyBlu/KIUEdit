@@ -242,6 +242,51 @@ void test_givenCursorIsMoved_should_correctlyWrapAroundOptions(void)
 	TEST_ASSERT_EQUAL_UINT32(0, menu.curr->selected);
 }
 
+void noop_action(void *menu, void *data) { return; }
+
+void test_givenNestedPage_whenReset_shouldOnlyBePageAndAction(void)
+{
+	Submenu *root = menu.curr;
+	Submenu *target = NULL, *sub_target = NULL;
+
+	target = add_submenu_option(root, "Reset target", switch_submenu);
+
+	sub_target = add_submenu_option(target, "Child A", switch_submenu);
+	add_submenu_option(target, "Child B", switch_submenu);
+	add_submenu_option(sub_target, "Grandchild A1", switch_submenu);
+
+	TEST_ASSERT_EQUAL_STRING("Reset target", target->desc);
+	TEST_ASSERT_EQUAL_PTR(root, target->prev);
+	TEST_ASSERT_EQUAL_UINT32(2, target->len);
+	TEST_ASSERT_NOT_NULL(target->options);
+	TEST_ASSERT_EQUAL_STRING("Child A", target->options[0]->desc);
+	TEST_ASSERT_EQUAL_STRING("Child B", target->options[1]->desc);
+
+	// Destroy all children
+	kill_children_reset_page(target, noop_action);
+
+	// Make sure everything has been reset.
+	// NOTE: This does not reset `data`, as the responsibility for the entire
+	// implementation of what data represents has been placed on the user.
+	// In the future, there may be a function you can hook into to set and
+	// unset data, but for the time being leave as is.
+	TEST_ASSERT_EQUAL_STRING("Reset target", target->desc);
+	TEST_ASSERT_EQUAL_UINT32(0, target->len);
+	TEST_ASSERT_EQUAL_UINT32(1, target->cap);
+	TEST_ASSERT_EQUAL_UINT32(0, target->selected);
+	TEST_ASSERT_EQUAL_UINT32(0, target->dealloc_idx);
+	TEST_ASSERT_EQUAL_UINT32(0, target->view_top);
+	TEST_ASSERT_EQUAL_PTR(root, target->prev);
+	TEST_ASSERT_NULL(target->options);
+	TEST_ASSERT_EQUAL_PTR(target->action, noop_action);
+
+	// Target remains usable after reset
+	add_submenu_option(target, "After reset child", switch_submenu);
+	TEST_ASSERT_EQUAL_UINT32(1, target->len);
+	TEST_ASSERT_NOT_NULL(target->options);
+	TEST_ASSERT_EQUAL_STRING("After reset child", target->options[0]->desc);
+}
+
 
 void test_ifCursorIsMovedAndSubmenuIsChanged_should_enterCorrectSubmenu(void)
 {
@@ -291,6 +336,7 @@ int main(void)
 	RUN_TEST(test_givenAThirdLevelPage_should_beConstructedCorrectly);
 	RUN_TEST(test_givenThreeSubmenusWithTwoLevelsEach_should_correctContainAllInformation);
 	RUN_TEST(test_givenSubmenuIsChanged_then_newCurrentShouldBeUpdated);
+	RUN_TEST(test_givenNestedPage_whenReset_shouldOnlyBePageAndAction);
 	RUN_TEST(test_ifCursorIsMovedAndSubmenuIsChanged_should_enterCorrectSubmenu);
 	UNITY_END();
 }

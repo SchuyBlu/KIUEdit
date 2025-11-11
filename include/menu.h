@@ -141,6 +141,15 @@ void switch_submenu(void *menu_ptr, void *k_down_ptr);
 
 
 /*
+ * Kills all child pages of page being reset. Resets all values
+ * for the current page.
+ * `reset` - Submenu page being reset.
+ * `action` - event to reset the page's action as.
+ */
+void kill_children_reset_page(Submenu *reset, event action);
+
+
+/*
  * Moves the cursor to the next option depending on the input given. Will
  * wrap around if the cursor moves beyond the length of the options list.
  * `menu` - pages being processed.
