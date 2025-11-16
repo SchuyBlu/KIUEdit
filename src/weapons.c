@@ -35,14 +35,14 @@ uint32_t weapon_get_value(Weapon *weapon)
 {
 	float value = 100;
 
-	value += RANGED_VALUES[weapon->ranged];
-	value += MELEE_VALUES[weapon->melee];
-	value += MOD_VALUES[weapon->bin_mod1 - 1];
-	value += MOD_VALUES[weapon->bin_mod2 - 1];
-	value += MOD_VALUES[weapon->bin_mod3 - 1];
-	value += MOD_VALUES[weapon->bin_mod4 - 1];
-	value += MOD_VALUES[weapon->bin_mod5 - 1];
-	value += MOD_VALUES[weapon->bin_mod6 - 1];
+	value += weapon->ranged ? RANGED_VALUES[weapon->ranged] : 0;
+	value += weapon->melee ? MELEE_VALUES[weapon->melee] : 0;
+	value += weapon->bin_mod1 ? MOD_VALUES[weapon->bin_mod1 - 1] : 0;
+	value += weapon->bin_mod2 ? MOD_VALUES[weapon->bin_mod2 - 1] : 0;
+	value += weapon->bin_mod3 ? MOD_VALUES[weapon->bin_mod3 - 1] : 0;
+	value += weapon->bin_mod4 ? MOD_VALUES[weapon->bin_mod4 - 1] : 0;
+	value += weapon->bin_mod5 ? MOD_VALUES[weapon->bin_mod5 - 1] : 0;
+	value += weapon->bin_mod6 ? MOD_VALUES[weapon->bin_mod6 - 1] : 0;
 
 	return (uint32_t)value;
 }

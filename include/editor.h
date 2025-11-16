@@ -92,8 +92,16 @@ void editor_switch_submenu(void *menu_ptr, void *context_ptr);
 
 
 /*
- * Function to be attached as an event to a submenu.
+ * Function to be attached as an event to a submenu. Loads a save.
  * `menu_ptr` - Pointer to the mneu.
  * `context_ptr` - Pointer the context for menu.
  */
 void load_save(void *menu_ptr, void *context_ptr);
+
+
+/*
+ * Function to be attached as an event to a submenu. Loads a list of weapons.
+ * `menu_ptr` - Pointer to the mneu.
+ * `context_ptr` - Pointer the context for menu.
+ */
+void load_weapons(void *menu_ptr, void *context_ptr);

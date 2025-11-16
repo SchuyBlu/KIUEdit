@@ -1,7 +1,7 @@
 #include "editor.h"
 #ifdef TEST_BUILD
 #define SAVE_PATH "test/input/editor"
-#else
+#else 
 #define SAVE_PATH "KIU:/"
 #endif
 
@@ -99,11 +99,72 @@ void build_weapon_menus(Submenu *submenu, SaveFile save)
 {
 	Submenu *curr = NULL;
 	const char *weapon_name = NULL;
+	char *new_weapon_name = NULL;
+	uint32_t new_weapon_name_len = 0, value = 0;
 
 	for (int i = 0; i < save.weapons.len; i++) {
 		weapon_name = save.weapons.array[i]->name;
-		curr = add_submenu_option(submenu, weapon_name, editor_switch_submenu);
+		curr = add_submenu_option(submenu, weapon_name, load_weapons);
+		// makes room for <weapon_name> <weapon_value>v
+		// Basically:
+		// 1 char for space
+		// 3 chars for value
+		// 1 char for v
+		// 1 char for null terminator
+		new_weapon_name_len = sizeof(char) * (strlen(weapon_name) + 6);
+		new_weapon_name = malloc(new_weapon_name_len);
+		assert(new_weapon_name);
+
+		value = weapon_get_value(save.weapons.array[i]);
+		snprintf(new_weapon_name, new_weapon_name_len, "%s %luv", weapon_name, value);
+		set_submenu_desc(curr, new_weapon_name);
+		free(new_weapon_name);
 		curr->data = save.weapons.array[i];
+	}
+}
+
+
+void build_mod_menus(Submenu *submenu, SaveFile save)
+{
+	Weapon *weapon = (Weapon*)submenu->data;
+	char *star_string = NULL;
+	double ranged = 0.0, melee = 0.0;
+	uint32_t star_string_len = 0;
+
+	const char *mods[] = {
+		weapon->mod1,
+		weapon->mod2,
+		weapon->mod3,
+		weapon->mod4,
+		weapon->mod5,
+		weapon->mod6,
+	};
+
+	// Add star values
+
+	ranged = (double)weapon->ranged / 2.0;
+	melee = (double)weapon->melee / 2.0;
+
+	// Make room for: "Ranged Stars: <value>"
+	star_string_len = sizeof(char) * (strlen("Ranged Stars: ") + 4);
+	star_string = malloc(star_string_len);
+	assert(star_string);
+
+	snprintf(star_string, star_string_len, "Ranged Stars: %.1f", ranged);
+	add_submenu_option(submenu, star_string, editor_switch_submenu);
+
+	free(star_string);
+
+	star_string_len = sizeof(char) * (strlen("Melee Stars: ") + 4);
+	star_string = malloc(star_string_len);
+	assert(star_string);
+	snprintf(star_string, star_string_len, "Melee Stars: %.1f", melee);
+	add_submenu_option(submenu, star_string, editor_switch_submenu);
+
+	free(star_string);
+
+	for (int i = 0; mods[i] != NULL && i < 6; i++) {
+		add_submenu_option(submenu, mods[i], editor_switch_submenu);
 	}
 }
 
@@ -164,4 +225,15 @@ void load_save(void *menu_ptr, void *context_ptr)
 
 	selected->action = editor_switch_submenu;
 	context->save_loaded = true;
+}
+
+
+void load_weapons(void *menu_ptr, void *context_ptr)
+{
+	Menu *menu = (Menu*)menu_ptr;
+	MenuContext *context = (MenuContext*)context_ptr;
+	Submenu *selected = menu->curr;
+
+	build_mod_menus(selected, context->save);
+	selected->action = editor_switch_submenu;
 }
