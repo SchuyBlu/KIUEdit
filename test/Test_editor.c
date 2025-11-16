@@ -183,6 +183,93 @@ void test_whenSavesAreLoaded_should_populateSubmenu_and_unloadOnFileChange(void)
 	destroy_editor(&editor);
 }
 
+/* Build the mods/stars page the first time we enter a weapon,
+ * and ensure action flips to editor_switch_submenu.
+ */
+void test_whenEnteringWeapon_should_buildStarsAndMods(void)
+{
+    Editor editor;
+    editor_init(&editor);
+    norm_path_names(&editor, "test/input/editor/");
+    TEST_ASSERT_TRUE_MESSAGE(editor.ctx.files_len >= 1, "Need at least one save.");
+
+    // Load first save
+    editor.menu.curr->selected = 0;
+    press_a(&editor);
+    TEST_ASSERT_TRUE(editor.ctx.save_loaded);
+
+    // Sanity: there should be at least one weapon option
+    Submenu *save_page = editor.menu.curr;
+    TEST_ASSERT_TRUE_MESSAGE(save_page->len > 0, "Loaded save should contain weapons.");
+
+    // Enter the first weapon: triggers load_weapons
+    Submenu *weapon0 = save_page->options[0];
+    save_page->selected = 0;
+    press_a(&editor);
+
+    // We are now on the weapon page, which should have been built and flipped
+    TEST_ASSERT_EQUAL_PTR(weapon0, editor.menu.curr);
+    TEST_ASSERT_EQUAL_PTR(editor_switch_submenu, weapon0->action);
+    TEST_ASSERT_TRUE_MESSAGE(weapon0->len >= 3,
+        "Weapon page should contain 'Change Weapon Type' and star lines.");
+
+    // Check expected first items by prefix (don’t depend on exact numbers)
+    TEST_ASSERT_NOT_NULL(weapon0->options[0]->desc);
+    TEST_ASSERT_TRUE(strncmp(weapon0->options[0]->desc, "Change Weapon Type", 18) == 0);
+
+    TEST_ASSERT_NOT_NULL(weapon0->options[1]->desc);
+    TEST_ASSERT_TRUE(strncmp(weapon0->options[1]->desc, "Ranged Stars:", 13) == 0);
+
+    TEST_ASSERT_NOT_NULL(weapon0->options[2]->desc);
+    TEST_ASSERT_TRUE(strncmp(weapon0->options[2]->desc, "Melee Stars:", 12) == 0);
+
+    // Mods, if present, should be non-empty strings; and total items <= 1 + 2 + 6
+    TEST_ASSERT_TRUE(weapon0->len <= 9);
+    for (uint32_t i = 3; i < weapon0->len; ++i) {
+        TEST_ASSERT_NOT_NULL(weapon0->options[i]->desc);
+        TEST_ASSERT_TRUE(weapon0->options[i]->desc[0] != '\0');
+    }
+
+    destroy_editor(&editor);
+}
+
+/* Re-entering the same weapon should NOT duplicate its children. */
+void test_whenReenteringWeapon_should_notDuplicatePageItems(void)
+{
+    Editor editor;
+    editor_init(&editor);
+    norm_path_names(&editor, "test/input/editor/");
+    TEST_ASSERT_TRUE_MESSAGE(editor.ctx.files_len >= 1, "Need at least one save.");
+
+    // Load first save
+    editor.menu.curr->selected = 0;
+    press_a(&editor);
+    TEST_ASSERT_TRUE(editor.ctx.save_loaded);
+
+    Submenu *save_page = editor.menu.curr;
+    TEST_ASSERT_TRUE_MESSAGE(save_page->len > 0, "Loaded save should contain weapons.");
+
+    // Enter first weapon → build once
+    Submenu *weapon0 = save_page->options[0];
+    save_page->selected = 0;
+    press_a(&editor);
+    TEST_ASSERT_EQUAL_PTR(weapon0, editor.menu.curr);
+    uint32_t built_len = weapon0->len;
+
+    // Go back to the save page
+    press_b(&editor);
+    TEST_ASSERT_EQUAL_PTR(save_page, editor.menu.curr);
+
+    // Enter the same weapon again → should NOT add more children
+    save_page->selected = 0;
+    press_a(&editor);
+    TEST_ASSERT_EQUAL_PTR(weapon0, editor.menu.curr);
+    TEST_ASSERT_EQUAL_UINT32_MESSAGE(built_len, weapon0->len,
+        "Weapon page should not duplicate items on re-enter.");
+
+    destroy_editor(&editor);
+}
+
 
 int main(void)
 {
@@ -192,6 +279,8 @@ int main(void)
 	RUN_TEST(test_whenWeaponsAreLoadedIntoSave_should_containCorrectWeaponNames);
 	RUN_TEST(test_editorInitCorrectly_should_correctlyLoadWeapons);
 	RUN_TEST(test_whenSavesAreLoaded_should_populateSubmenu_and_unloadOnFileChange);
+	RUN_TEST(test_whenEnteringWeapon_should_buildStarsAndMods);
+	RUN_TEST(test_whenReenteringWeapon_should_notDuplicatePageItems);
 	UNITY_END();
 }
 

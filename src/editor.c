@@ -140,6 +140,9 @@ void build_mod_menus(Submenu *submenu, SaveFile save)
 		weapon->mod6,
 	};
 
+	// Add a page to change the weapon
+	add_submenu_option(submenu, "Change Weapon Type", editor_switch_submenu);
+
 	// Add star values
 
 	ranged = (double)weapon->ranged / 2.0;
@@ -163,7 +166,7 @@ void build_mod_menus(Submenu *submenu, SaveFile save)
 
 	free(star_string);
 
-	for (int i = 0; mods[i] != NULL && i < 6; i++) {
+	for (int i = 0; i < 6 && mods[i] != NULL; i++) {
 		add_submenu_option(submenu, mods[i], editor_switch_submenu);
 	}
 }

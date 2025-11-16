@@ -5,7 +5,7 @@ void savefile_init(SaveFile *save, char *path)
 	save->fp = NULL;
 	save->weapons = (Weapons){ NULL, 0, 1 };
 
-	save->fp = fopen(path, "r");
+	save->fp = fopen(path, "r+");
 	assert(save->fp);
 
 	fetch_savefile_hearts(save);
@@ -144,12 +144,28 @@ void populate_mod_string(const char **slot, uint8_t index)
 
 void populate_mod_data(Weapon *weapon, FILE *fp)
 {
-	fread(&weapon->bin_mod1, 2, 1, fp);
-	fread(&weapon->bin_mod2, 2, 1, fp);
-	fread(&weapon->bin_mod3, 2, 1, fp);
-	fread(&weapon->bin_mod4, 2, 1, fp);
-	fread(&weapon->bin_mod5, 2, 1, fp);
-	fread(&weapon->bin_mod6, 2, 1, fp);
+	uint8_t pad;
+
+	fread(&weapon->bin_mod1, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod2, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod3, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod3, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod4, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod5, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
+
+	fread(&weapon->bin_mod6, 1, 1, fp);
+	fread(&pad, 1, 1, fp);
 
 	populate_mod_string(&weapon->mod1, weapon->bin_mod1);
 	populate_mod_string(&weapon->mod2, weapon->bin_mod2);
